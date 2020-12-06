@@ -1,7 +1,6 @@
 package com.professionalandroid.apps.miniproject_platfarm
 
 import android.inputmethodservice.InputMethodService
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
@@ -39,6 +38,7 @@ class EmoticonKeyboardService: InputMethodService() {
 
     // view가 차지할 영역을 정의
     override fun onCreateInputView(): View {
+        // view 중복 참조 제거 (화면 회전 시 등)
         if (keyboardView != null){
             (keyboardView as ViewGroup).removeAllViews()
         }
@@ -52,7 +52,7 @@ class EmoticonKeyboardService: InputMethodService() {
         super.onStartInputView(info, restarting)
         emoticonKeyboard = EmoticonCustomView(applicationContext).apply {
             inputConnection = currentInputConnection
-            setData(itemList)
+            setData(itemList)   // customView에 데이터 추가
         }
         keyboardContainer?.addView(emoticonKeyboard?.getLayout())
     }

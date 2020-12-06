@@ -3,13 +3,11 @@ package com.professionalandroid.apps.miniproject_platfarm.emoticon_custom_view
 import android.content.Context
 import android.content.res.Configuration
 import android.util.AttributeSet
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputConnection
-import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.GridLayoutManager
@@ -53,7 +51,7 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
         val height = 800
 
         if (config.orientation == Configuration.ORIENTATION_LANDSCAPE){ // 가로화면
-            mEmotionCustomViewPagerAdapter = EmoticonCustomViewPagerAdapter(itemList, this, 6)
+            mEmotionCustomViewPagerAdapter = EmoticonCustomViewPagerAdapter(itemList, this, 6)  // 가로에는 이모티콘 6개씩
             mEmoticonViewPager2 = emoticonCustomView!!.findViewById<ViewPager2>(R.id.emoticon_view_pager).apply {
                 adapter = mEmotionCustomViewPagerAdapter
             }
@@ -67,7 +65,7 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
             mEmoticonShop?.layoutParams = LayoutParams(height / 10, height / 10)
         }
         else{   // 세로화면
-            mEmotionCustomViewPagerAdapter = EmoticonCustomViewPagerAdapter(itemList, this, 3)
+            mEmotionCustomViewPagerAdapter = EmoticonCustomViewPagerAdapter(itemList, this, 3)  // 세로에는 이모티콘 3개씩
             mEmoticonViewPager2 = emoticonCustomView!!.findViewById<ViewPager2>(R.id.emoticon_view_pager).apply {
                 adapter = mEmotionCustomViewPagerAdapter
             }
@@ -81,7 +79,7 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
             mEmoticonShop?.layoutParams = LayoutParams(height / 10, height / 10)
         }
 
-        // Attaching TabLayout and ViewPager
+        // TabLayout과 ViewPager 연결
         TabLayoutMediator(mEmoticonTabLayout!!, mEmoticonViewPager2!!) { tab, position ->
             if(position == 0) {
                 tab.setIcon(itemList[0].tabImage[0])
@@ -113,7 +111,7 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
         return emoticonCustomView!!
     }
 
-    // itemSelectedListener
+    // 이모티콘 click listener
     override fun itemSelected(parent_position: Int, position: Int) {
 
     }
@@ -152,6 +150,7 @@ class EmoticonCustomViewPagerAdapter(val itemList: List<EmoticonData>, val liste
 // RecyclerView Adapter in ViewPager
 class EmoticonObjectRecyclerViewAdapter(val imageList: List<Int>, val parent_position: Int, val listener: ItemSelected): RecyclerView.Adapter<EmoticonObjectRecyclerViewAdapter.ViewHolder>() {
 
+    // 이모티콘 click interface
     interface ItemSelected{
         fun itemSelected(parent_position: Int, position: Int)
     }
