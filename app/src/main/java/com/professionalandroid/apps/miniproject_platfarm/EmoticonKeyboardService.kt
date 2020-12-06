@@ -30,23 +30,15 @@ class EmoticonKeyboardService: InputMethodService() {
     val keyboardInteractionListener = object : KeyboardInteractionListener{
         override fun modeChange(mode: Int) {
             currentInputConnection.finishComposingText()
-
         }
     }
 
     override fun onCreate() {
         super.onCreate()
-
-    }
-
-    override fun onStartInput(attribute: EditorInfo?, restarting: Boolean) {
-        super.onStartInput(attribute, restarting)
-        Log.d("test", "start input")
     }
 
     // view가 차지할 영역을 정의
     override fun onCreateInputView(): View {
-        Log.d("test", "onCreateInputView")
         if (keyboardView != null){
             (keyboardView as ViewGroup).removeAllViews()
         }
@@ -58,25 +50,11 @@ class EmoticonKeyboardService: InputMethodService() {
     // view가 튀어 나올 때
     override fun onStartInputView(info: EditorInfo?, restarting: Boolean) {
         super.onStartInputView(info, restarting)
-        Log.d("test", "start input view")
-        emoticonKeyboard = EmoticonCustomView(applicationContext)
-        emoticonKeyboard?.inputConnection = currentInputConnection
-        emoticonKeyboard?.setData(itemList)
+        emoticonKeyboard = EmoticonCustomView(applicationContext).apply {
+            inputConnection = currentInputConnection
+            setData(itemList)
+        }
         keyboardContainer?.addView(emoticonKeyboard?.getLayout())
     }
 
-    override fun onFinishInputView(finishingInput: Boolean) {
-        super.onFinishInputView(finishingInput)
-        Log.d("test", "finish input view")
-    }
-
-    override fun onFinishInput() {
-        super.onFinishInput()
-        Log.d("test", "finish")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d("test", "destroy")
-    }
 }

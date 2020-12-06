@@ -37,7 +37,6 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
     var mEmotionCustomViewPagerAdapter: EmoticonCustomViewPagerAdapter? = null
 
     init {
-        Log.d("test", "custom onCreate")
         emoticonCustomView = inflate(context, R.layout.layout_emoticon_custom_view, this) as LinearLayout
         mEmoticonTabLayoutContainer = findViewById(R.id.emoticon_tab_layout_container)
         mEmoticonSubContainer = findViewById(R.id.emoticon_sub_container)
