@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#F2000000"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="12"
+        android:orientation="horizontal"
+        android:background="@color/white"
+        android:layout_marginTop="0.5dp"
+        android:layout_marginBottom="0.5dp">
+
+        <LinearLayout
+            android:id="@+id/emoticon_tab_layout_container"
+            android:layout_width="0dp"
+            android:layout_weight="10"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:paddingStart="10dp">
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/emoticon_tab_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:tabRippleColor="@null"
+                app:tabMode="scrollable"
+                android:scrollbars="none"
+                app:tabIndicatorHeight="0dp"
+                app:tabGravity="start"
+                app:tabBackground="@drawable/selector_tab_background"
+                android:theme="@style/TabTheme"
+                app:tabMaxWidth="50dp"
+                android:elevation="4dp">
+
+
+            </com.google.android.material.tabs.TabLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/emoticon_sub_container"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:background="@color/white">
+
+            <LinearLayout
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/grey"/>
+
+            <ImageView
+                android:id="@+id/setting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:padding="3dp"
+                android:layout_marginStart="10dp"
+                android:src="@drawable/ic_baseline_settings_24"/>
+
+            <ImageView
+                android:id="@+id/shop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:padding="3dp"
+                android:src="@drawable/ic_baseline_home_24" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/emoticon_view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#F9F9F9" />
+
+</LinearLayout>
