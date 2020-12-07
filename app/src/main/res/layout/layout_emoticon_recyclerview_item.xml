@@ -5,4 +5,5 @@
     android:id="@+id/emoticon_image"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:adjustViewBounds="true"
     android:padding="10dp"/>
