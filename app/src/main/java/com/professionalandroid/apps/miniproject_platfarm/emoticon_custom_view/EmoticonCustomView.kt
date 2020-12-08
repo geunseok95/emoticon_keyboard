@@ -86,8 +86,6 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
 
     // setData
     fun setData(){
-
-        Log.d("test", "setData")
         mEmoticonTabLayout = emoticonCustomView!!.findViewById<TabLayout>(R.id.emoticon_tab_layout)
 
         val config = context.resources.configuration
@@ -189,10 +187,8 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
             temp.emoticon.add(i.images.the480WStill.url)
         }
         itemList.add(temp)
-        Log.d("test", "$position $temp")
 
         if (itemList.size == size + 1){
-            Log.d("test", "${itemList.size} ${position}" )
             setData()
         }
 

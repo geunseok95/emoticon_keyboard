@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import com.professionalandroid.apps.miniproject_platfarm.emoji_custom_view.EmojiCustomView
 import com.professionalandroid.apps.miniproject_platfarm.emoticon_custom_view.EmoticonCustomView
 import com.professionalandroid.apps.miniproject_platfarm.english_custom_view.EnglishCustomView
 import com.professionalandroid.apps.miniproject_platfarm.korean_custom_view.KoreanCustomView
@@ -20,6 +21,7 @@ class EmoticonKeyboardService: InputMethodService() {
     var englishKeyboard: EnglishCustomView? = null
     var koreanKeyboard: KoreanCustomView? = null
     var specialCharactersCustomView: SpecialCharactersCustomView? = null
+    var emojiCustomView: EmojiCustomView? = null
 
     val keyboardInteractionListener = object : KeyboardInteractionListener{
         override fun modeChange(mode: Int) {
@@ -44,6 +46,11 @@ class EmoticonKeyboardService: InputMethodService() {
                     keyboardContainer?.removeAllViews()
                     specialCharactersCustomView?.inputConnection = currentInputConnection
                     keyboardContainer?.addView(specialCharactersCustomView?.getLayout())
+                }
+                4 -> {
+                    keyboardContainer?.removeAllViews()
+                    emojiCustomView?.inputConnection = currentInputConnection
+                    keyboardContainer?.addView(emojiCustomView?.getLayout())
                 }
             }
         }
@@ -78,6 +85,11 @@ class EmoticonKeyboardService: InputMethodService() {
         }
 
         specialCharactersCustomView = SpecialCharactersCustomView(applicationContext, layoutInflater, keyboardInteractionListener).apply {
+            inputConnection = currentInputConnection
+            init()
+        }
+
+        emojiCustomView = EmojiCustomView(applicationContext, layoutInflater, keyboardInteractionListener).apply {
             inputConnection = currentInputConnection
             init()
         }

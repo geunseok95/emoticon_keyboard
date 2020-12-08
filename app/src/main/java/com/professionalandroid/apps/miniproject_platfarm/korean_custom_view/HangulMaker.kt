@@ -1,4 +1,4 @@
-package com.professionalandroid.apps.miniproject_platfarm
+package com.professionalandroid.apps.miniproject_platfarm.korean_custom_view
 
 import android.view.inputmethod.InputConnection
 

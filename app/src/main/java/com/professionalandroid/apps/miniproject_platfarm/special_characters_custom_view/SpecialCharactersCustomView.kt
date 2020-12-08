@@ -18,7 +18,7 @@ import com.professionalandroid.apps.miniproject_platfarm.KeyboardInteractionList
 import com.professionalandroid.apps.miniproject_platfarm.R
 
 class SpecialCharactersCustomView constructor(var context:Context, var layoutInflater: LayoutInflater, var keyboardInteractionListener: KeyboardInteractionListener) {
-    lateinit var simbolsLayout: LinearLayout
+    lateinit var specialCharactersLayout: LinearLayout
     var inputConnection:InputConnection? = null
         set(inputConnection){
             field = inputConnection
@@ -40,7 +40,7 @@ class SpecialCharactersCustomView constructor(var context:Context, var layoutInf
     var capsView:ImageView? = null
 
     fun init(){
-        simbolsLayout = layoutInflater.inflate(R.layout.layout_korean_special_characters, null) as LinearLayout
+        specialCharactersLayout = layoutInflater.inflate(R.layout.layout_korean_special_characters, null) as LinearLayout
         inputConnection = inputConnection
 
         val config = context.getResources().configuration
@@ -50,19 +50,19 @@ class SpecialCharactersCustomView constructor(var context:Context, var layoutInf
         sound = sharedPreferences.getInt("keyboardSound", -1)
         vibrate = sharedPreferences.getInt("keyboardVibrate", -1)
 
-        val numpadLine = simbolsLayout.findViewById<LinearLayout>(
+        val numpadLine = specialCharactersLayout.findViewById<LinearLayout>(
             R.id.numpad_line
         )
-        val firstLine = simbolsLayout.findViewById<LinearLayout>(
+        val firstLine = specialCharactersLayout.findViewById<LinearLayout>(
             R.id.first_line
         )
-        val secondLine = simbolsLayout.findViewById<LinearLayout>(
+        val secondLine = specialCharactersLayout.findViewById<LinearLayout>(
             R.id.second_line
         )
-        val thirdLine = simbolsLayout.findViewById<LinearLayout>(
+        val thirdLine = specialCharactersLayout.findViewById<LinearLayout>(
             R.id.third_line
         )
-        val fourthLine = simbolsLayout.findViewById<LinearLayout>(
+        val fourthLine = specialCharactersLayout.findViewById<LinearLayout>(
             R.id.fourth_line
         )
 
@@ -94,7 +94,7 @@ class SpecialCharactersCustomView constructor(var context:Context, var layoutInf
     }
 
     fun getLayout():LinearLayout{
-        return simbolsLayout
+        return specialCharactersLayout
     }
 
     fun modeChange(){
@@ -143,7 +143,7 @@ class SpecialCharactersCustomView constructor(var context:Context, var layoutInf
 
             when (actionButton.text.toString()) {
                 "\uD83D\uDE00" -> {
-                    keyboardInteractionListener.modeChange(0)
+                    keyboardInteractionListener.modeChange(4)
                 }
                 "\uD83C\uDD93" -> {
                     keyboardInteractionListener.modeChange(0)

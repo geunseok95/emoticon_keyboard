@@ -5,7 +5,6 @@ import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.media.AudioManager
 import android.os.*
-import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -15,7 +14,6 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.core.view.children
-import com.professionalandroid.apps.miniproject_platfarm.HangulMaker
 import com.professionalandroid.apps.miniproject_platfarm.KeyboardInteractionListener
 import com.professionalandroid.apps.miniproject_platfarm.R
 
@@ -50,7 +48,10 @@ class KoreanCustomView constructor(var context:Context, var layoutInflater: Layo
 
     fun init(){
         koreanLayout = layoutInflater.inflate(R.layout.layout_english_keyboard, null) as LinearLayout
-        hangulMaker = HangulMaker(inputConnection!!)
+        hangulMaker =
+            HangulMaker(
+                inputConnection!!
+            )
         vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
 
         sharedPreferences = context.getSharedPreferences("setting", Context.MODE_PRIVATE)
@@ -109,7 +110,10 @@ class KoreanCustomView constructor(var context:Context, var layoutInflater: Layo
     }
 
     fun getLayout():LinearLayout{
-        hangulMaker = HangulMaker(inputConnection!!)
+        hangulMaker =
+            HangulMaker(
+                inputConnection!!
+            )
         setLayoutComponents()
         return koreanLayout
     }
