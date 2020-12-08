@@ -7,7 +7,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 class ApplicationClass: Application() {
 
     companion object{
-        var BASE_URL = "http://api.giphy.com/v1/stickers/"
+        val BASE_URL = "http://api.giphy.com/v1/stickers/"
+
+        val api_key = "g5jEYnDfhdwpO7SL3CfBBNNzkRN7HKIi"
 
         var retrofit: Retrofit? = null
 

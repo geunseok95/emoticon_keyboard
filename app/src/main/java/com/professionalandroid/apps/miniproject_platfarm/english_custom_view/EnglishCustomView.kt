@@ -8,7 +8,7 @@ import android.media.AudioManager
 import android.os.Build
 import android.os.Handler
 import android.os.SystemClock
-import android.os.Vibrator
+import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -131,7 +131,7 @@ class EnglishCustomView constructor(var context: Context, var layoutInflater: La
         val am = context.getSystemService(AUDIO_SERVICE) as AudioManager?
         when (i) {
             32 -> am!!.playSoundEffect(AudioManager.FX_KEYPRESS_SPACEBAR)
-            else -> am!!.playSoundEffect(AudioManager.FX_KEYPRESS_STANDARD, -1.toFloat())
+            else -> am!!.playSoundEffect(AudioManager.FX_KEYPRESS_STANDARD, (-1).toFloat())
         }
     }
 
@@ -156,10 +156,10 @@ class EnglishCustomView constructor(var context: Context, var layoutInflater: La
             }
             when (textView.text.toString()) {
                 "한/영" -> {
-                    keyboardInteractionListener.modeChange(1)
+                    keyboardInteractionListener.modeChange(2)
                 }
                 "!#1" -> {
-                    keyboardInteractionListener.modeChange(2)
+                    keyboardInteractionListener.modeChange(0)
                 }
                 else -> {
                     playClick(textView.text.toString().toCharArray()[0].toInt())
@@ -207,7 +207,7 @@ class EnglishCustomView constructor(var context: Context, var layoutInflater: La
                         playClick(
                             actionButton.text.toString().toCharArray()[0].toInt()
                         )
-                        inputConnection?.commitText(actionButton.text,1)
+                        inputConnection?.commitText(actionButton.text, 1)
                     }
                 }
             }
@@ -250,7 +250,6 @@ class EnglishCustomView constructor(var context: Context, var layoutInflater: La
                 return false
             }
         }
-
         return onTouchListener
     }
 
@@ -261,44 +260,44 @@ class EnglishCustomView constructor(var context: Context, var layoutInflater: La
             var longClickIndex = 0
             for(item in children.indices){
                 val actionButton = children[item].findViewById<Button>(R.id.key_button)
-                val spacialKey = children[item].findViewById<ImageView>(R.id.spacial_key)
+                val specialKey = children[item].findViewById<ImageView>(R.id.special_key)
                 var myOnClickListener:View.OnClickListener? = null
                 when(myText[item]){
                     "space" -> {
-                        spacialKey.setImageResource(R.drawable.ic_space_bar)
-                        spacialKey.visibility = View.VISIBLE
+                        specialKey.setImageResource(R.drawable.ic_space_bar)
+                        specialKey.visibility = View.VISIBLE
                         actionButton.visibility = View.GONE
                         myOnClickListener = getSpaceAction()
-                        spacialKey.setOnClickListener(myOnClickListener)
-                        spacialKey.setOnTouchListener(getOnTouchListener(myOnClickListener))
-                        spacialKey.setBackgroundResource(R.drawable.key_background)
+                        specialKey.setOnClickListener(myOnClickListener)
+                        specialKey.setOnTouchListener(getOnTouchListener(myOnClickListener))
+                        specialKey.setBackgroundResource(R.drawable.key_background)
                     }
                     "DEL" -> {
-                        spacialKey.setImageResource(R.drawable.del)
-                        spacialKey.visibility = View.VISIBLE
+                        specialKey.setImageResource(R.drawable.del)
+                        specialKey.visibility = View.VISIBLE
                         actionButton.visibility = View.GONE
                         myOnClickListener = getDeleteAction()
-                        spacialKey.setOnClickListener(myOnClickListener)
-                        spacialKey.setOnTouchListener(getOnTouchListener(myOnClickListener))
+                        specialKey.setOnClickListener(myOnClickListener)
+                        specialKey.setOnTouchListener(getOnTouchListener(myOnClickListener))
                     }
                     "CAPS" -> {
-                        spacialKey.setImageResource(R.drawable.ic_caps_unlock)
-                        spacialKey.visibility = View.VISIBLE
+                        specialKey.setImageResource(R.drawable.ic_caps_unlock)
+                        specialKey.visibility = View.VISIBLE
                         actionButton.visibility = View.GONE
-                        capsView = spacialKey
+                        capsView = specialKey
                         myOnClickListener = getCapsAction()
-                        spacialKey.setOnClickListener(myOnClickListener)
-                        spacialKey.setOnTouchListener(getOnTouchListener(myOnClickListener))
-                        spacialKey.setBackgroundResource(R.drawable.key_background)
+                        specialKey.setOnClickListener(myOnClickListener)
+                        specialKey.setOnTouchListener(getOnTouchListener(myOnClickListener))
+                        specialKey.setBackgroundResource(R.drawable.key_background)
                     }
                     "Enter" -> {
-                        spacialKey.setImageResource(R.drawable.ic_enter)
-                        spacialKey.visibility = View.VISIBLE
+                        specialKey.setImageResource(R.drawable.ic_enter)
+                        specialKey.visibility = View.VISIBLE
                         actionButton.visibility = View.GONE
                         myOnClickListener = getEnterAction()
-                        spacialKey.setOnClickListener(myOnClickListener)
-                        spacialKey.setOnTouchListener(getOnTouchListener(myOnClickListener))
-                        spacialKey.setBackgroundResource(R.drawable.key_background)
+                        specialKey.setOnClickListener(myOnClickListener)
+                        specialKey.setOnTouchListener(getOnTouchListener(myOnClickListener))
+                        specialKey.setBackgroundResource(R.drawable.key_background)
                     }
                     else -> {
                         val longClickTextView = children[item].findViewById<TextView>(R.id.text_long_click)
@@ -319,10 +318,11 @@ class EnglishCustomView constructor(var context: Context, var layoutInflater: La
             }
         }
     }
+
     fun getSpaceAction():View.OnClickListener{
         return View.OnClickListener{
             playClick('ㅂ'.toInt())
-            inputConnection?.commitText(" ",1)
+            inputConnection?.commitText(" ", 1)
         }
     }
 

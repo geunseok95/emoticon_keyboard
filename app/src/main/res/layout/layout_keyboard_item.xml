@@ -21,9 +21,10 @@
         android:layout_marginStart="2dp"
         android:duplicateParentState="true"
         android:longClickable="true"
+        android:textAllCaps="false"
         android:background="@drawable/key_background"/>
     <ImageView
-        android:id="@+id/spacial_key"
+        android:id="@+id/special_key"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="4dp"

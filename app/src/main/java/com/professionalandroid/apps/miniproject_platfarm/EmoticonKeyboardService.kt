@@ -64,7 +64,7 @@ class EmoticonKeyboardService: InputMethodService() {
         keyboardView = layoutInflater.inflate(R.layout.layout_emoticon_keyboard, null) as LinearLayout
         keyboardContainer = keyboardView?.findViewById(R.id.keyboard_container)
 
-        emoticonKeyboard = EmoticonCustomView(applicationContext).apply {
+        emoticonKeyboard = EmoticonCustomView(applicationContext, keyboardInteractionListener).apply {
             inputConnection = currentInputConnection
         }
 
@@ -85,7 +85,7 @@ class EmoticonKeyboardService: InputMethodService() {
     override fun onStartInputView(info: EditorInfo?, restarting: Boolean) {
         super.onStartInputView(info, restarting)
 
-        keyboardContainer?.addView(koreanKeyboard?.getLayout())
+        keyboardContainer?.addView(englishKeyboard?.getLayout())
     }
 
 }

@@ -23,6 +23,7 @@ import com.professionalandroid.apps.miniproject_platfarm.ApplicationClass
 import com.professionalandroid.apps.miniproject_platfarm.KeyboardInteractionListener
 import com.professionalandroid.apps.miniproject_platfarm.R
 import com.professionalandroid.apps.miniproject_platfarm.emoticon_custom_view.interfaces.EmoticonCustomViewRetrofitInterface
+import com.professionalandroid.apps.miniproject_platfarm.emoticon_custom_view.interfaces.EmoticonCustomViewView
 import com.professionalandroid.apps.miniproject_platfarm.emoticon_custom_view.modles.EmoticonData
 import com.professionalandroid.apps.miniproject_platfarm.emoticon_custom_view.modles.GiphyResponse
 import retrofit2.Call
@@ -30,11 +31,13 @@ import retrofit2.Callback
 import retrofit2.Response
 
 open class EmoticonCustomView @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, defStyleAttr: Int = 0)
-    : LinearLayout(context, attributeSet, defStyleAttr), EmoticonObjectRecyclerViewAdapter.ItemSelected {
+    : LinearLayout(context, attributeSet, defStyleAttr), EmoticonObjectRecyclerViewAdapter.ItemSelected , EmoticonCustomViewView{
 
+    var mEmoticonCustomViewPresenter: EmoticonCustomViewPresenter
+    lateinit var keyboardInteractionListener: KeyboardInteractionListener
 
     constructor(context: Context, keyboardInteractionListener: KeyboardInteractionListener): this(context){
-
+        this.keyboardInteractionListener = keyboardInteractionListener
     }
 
     var emoticonCustomView: LinearLayout? = null
@@ -52,6 +55,7 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
     var mEmotionCustomViewPagerAdapter: EmoticonCustomViewPagerAdapter? = null
 
     init {
+        mEmoticonCustomViewPresenter = EmoticonCustomViewPresenter(this)
         emoticonCustomView = inflate(context, R.layout.layout_emoticon_custom_view, this) as LinearLayout
         mEmoticonTabLayoutContainer = findViewById(R.id.emoticon_tab_layout_container)
         mEmoticonSubContainer = findViewById(R.id.emoticon_sub_container)
@@ -59,29 +63,7 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
         mEmoticonShop = findViewById(R.id.shop)
         mKeyboardChange = findViewById(R.id.changeKeyBoard)
 
-        val mEmoticonCustomViewRetrofitInterface = ApplicationClass.retrofitService()!!.create(
-            EmoticonCustomViewRetrofitInterface::class.java)
-
-        mEmoticonCustomViewRetrofitInterface.getTrendingStickers("g5jEYnDfhdwpO7SL3CfBBNNzkRN7HKIi").enqueue(object :
-            Callback<GiphyResponse> {
-            override fun onFailure(call: Call<GiphyResponse>, t: Throwable) {
-                Log.d("test", "sticker 불러오기 실패")
-            }
-
-            override fun onResponse(call: Call<GiphyResponse>, response: Response<GiphyResponse>) {
-                val body = response.body()
-                Log.d("test",body.toString())
-                if (body != null) {
-                    val temp = EmoticonData(mutableListOf(body.data[0].images.original.url, body.data[1].images.original.url), mutableListOf())
-                    for (i in body.data){
-                        temp.emoticon.add(i.images.downsized_medium.url)
-                    }
-                    Log.d("test", temp.toString())
-                    itemList.add(temp)
-                    setData()
-                }
-            }
-        })
+        mEmoticonCustomViewPresenter.getTrendingStickerFromGiphy()
 
     }
 
@@ -98,8 +80,8 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
             mEmoticonViewPager2 = emoticonCustomView!!.findViewById<ViewPager2>(R.id.emoticon_view_pager).apply {
                 adapter = mEmotionCustomViewPagerAdapter
             }
-            mEmoticonTabLayoutContainer?.layoutParams = LayoutParams(0, height / 8, 11f)
-            mEmoticonSubContainer?.layoutParams = LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f).apply {
+            mEmoticonTabLayoutContainer?.layoutParams = LayoutParams(0, height / 8, 12f)
+            mEmoticonSubContainer?.layoutParams = LayoutParams(0, LayoutParams.WRAP_CONTENT, 2f).apply {
                 gravity = Gravity.CENTER
             }
             mEmoticonTabLayout?.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, height / 8)
@@ -113,7 +95,7 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
             mEmoticonViewPager2 = emoticonCustomView!!.findViewById<ViewPager2>(R.id.emoticon_view_pager).apply {
                 adapter = mEmotionCustomViewPagerAdapter
             }
-            mEmoticonTabLayoutContainer?.layoutParams = LayoutParams(0, height / 8, 19f)
+            mEmoticonTabLayoutContainer?.layoutParams = LayoutParams(0, height / 8, 11f)
             mEmoticonSubContainer?.layoutParams = LayoutParams(0, LayoutParams.WRAP_CONTENT, 3f).apply {
                     gravity = Gravity.CENTER
             }
@@ -125,7 +107,7 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
         }
 
         mKeyboardChange?.setOnClickListener {
-
+            keyboardInteractionListener.modeChange(1)
         }
 
         // TabLayout과 ViewPager 연결
@@ -179,6 +161,21 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
     // 이모티콘 click listener
     override fun itemSelected(parent_position: Int, position: Int) {
 
+    }
+
+    override fun addStickerToList(body: GiphyResponse) {
+        val temp = EmoticonData(
+            mutableListOf(
+                body.data[0].images.original.url,
+                body.data[1].images.original.url
+            ), mutableListOf()
+        )
+        for (i in body.data) {
+            temp.emoticon.add(i.images.downsized_medium.url)
+        }
+        Log.d("test", temp.toString())
+        itemList.add(temp)
+        setData()
     }
 }
 
