@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId "com.professionalandroid.apps.miniproject_platfarm"
-        minSdkVersion 27
+        minSdkVersion 23
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -46,8 +46,8 @@ dependencies {
 
     // Retrofit2
     implementation 'com.google.code.gson:gson:2.8.6'
-    implementation 'com.squareup.retrofit2:retrofit:2.6.2'
-    implementation 'com.squareup.retrofit2:converter-gson:2.6.2'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
     //Optional: see how to use the utility.
     implementation 'com.ogaclejapan.smarttablayout:utils-v4:2.0.0@aar'

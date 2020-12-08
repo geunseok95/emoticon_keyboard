@@ -1,5 +1,7 @@
 package com.professionalandroid.apps.miniproject_platfarm.emoticon_custom_view.modles
 
+import com.google.gson.annotations.SerializedName
+
 data class GiphyResponse (
     val data: List<Datum>,
     val pagination: Pagination,
@@ -63,6 +65,7 @@ data class Images (
     val preview: The4_K,
     val preview_gif: The480_WStill,
     val preview_webp: The480_WStill,
+    @SerializedName("480w_still")
     val the480WStill: The480_WStill,
     val hd: The4_K? = null,
     val the4K: The4_K? = null

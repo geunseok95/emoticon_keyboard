@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputConnection
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.GridLayoutManager
@@ -33,6 +34,9 @@ import retrofit2.Response
 open class EmoticonCustomView @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, defStyleAttr: Int = 0)
     : LinearLayout(context, attributeSet, defStyleAttr), EmoticonObjectRecyclerViewAdapter.ItemSelected , EmoticonCustomViewView{
 
+    val templist = mutableListOf("cheeseburgers", "love", "sad", "OMG", "coffee", "thanks")
+    var size = templist.size
+
     var mEmoticonCustomViewPresenter: EmoticonCustomViewPresenter
     lateinit var keyboardInteractionListener: KeyboardInteractionListener
 
@@ -45,6 +49,7 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
 
     private var itemList = mutableListOf<EmoticonData>()
 
+    var mEmoticonBar: LinearLayout? = null
     var mEmoticonTabLayout: TabLayout? = null
     var mEmoticonTabLayoutContainer: LinearLayout? = null
     var mEmoticonSubContainer: LinearLayout? = null
@@ -56,15 +61,28 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
 
     init {
         mEmoticonCustomViewPresenter = EmoticonCustomViewPresenter(this)
+
         emoticonCustomView = inflate(context, R.layout.layout_emoticon_custom_view, this) as LinearLayout
+
+        mEmoticonBar = findViewById(R.id.emoticon_bar)
         mEmoticonTabLayoutContainer = findViewById(R.id.emoticon_tab_layout_container)
         mEmoticonSubContainer = findViewById(R.id.emoticon_sub_container)
         mEmoticonSetting = findViewById(R.id.setting)
         mEmoticonShop = findViewById(R.id.shop)
         mKeyboardChange = findViewById(R.id.changeKeyBoard)
 
-        mEmoticonCustomViewPresenter.getTrendingStickerFromGiphy()
 
+        // getSticker
+        if (itemList.size == 0) {
+            mEmoticonCustomViewPresenter.getTrendingStickerFromGiphy(0, 15)
+
+            for (i in templist.indices) {
+                mEmoticonCustomViewPresenter.getCertainStickerFromGiphy(templist[i], i + 1, 15)
+            }
+        }
+        else{
+            setData()
+        }
     }
 
     // setData
@@ -89,7 +107,9 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
             mEmoticonSetting?.layoutParams = LayoutParams(height / 15, height / 15)
             mEmoticonShop?.layoutParams = LayoutParams(height / 15, height / 15)
             mKeyboardChange?.layoutParams = LayoutParams(height / 15, height / 15)
+
         }
+
         else{   // 세로화면
             mEmotionCustomViewPagerAdapter = EmoticonCustomViewPagerAdapter(context, itemList, this, 3)  // 세로에는 이모티콘 3개씩
             mEmoticonViewPager2 = emoticonCustomView!!.findViewById<ViewPager2>(R.id.emoticon_view_pager).apply {
@@ -113,7 +133,6 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
         // TabLayout과 ViewPager 연결
         TabLayoutMediator(mEmoticonTabLayout!!, mEmoticonViewPager2!!) { tab, position ->
             if(position == 0) {
-
                 val imageView =  ImageView(context)
                 Glide.with(context)
                     .load(itemList[0].tabImage[0])
@@ -123,7 +142,7 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
             else {
                 val imageView =  ImageView(context)
                 Glide.with(context)
-                    .load(itemList[0].tabImage[1])
+                    .load(itemList[position].tabImage[1])
                     .into(imageView)
                 tab.customView = imageView
             }
@@ -135,20 +154,16 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
-                val imageView =  ImageView(context)
                 Glide.with(context)
-                    .load(itemList[0].tabImage[0])
-                    .into(imageView)
-                tab?.customView = imageView
+                    .load(itemList[tab!!.position].tabImage[0])
+                    .into(tab.customView as ImageView)
             }
 
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 // changing tab icon
-                val imageView =  ImageView(context)
                 Glide.with(context)
-                    .load(itemList[0].tabImage[1])
-                    .into(imageView)
-                tab?.customView = imageView
+                    .load(itemList[tab!!.position].tabImage[1])
+                    .into(tab.customView as ImageView)
             }
         })
     }
@@ -163,19 +178,22 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
 
     }
 
-    override fun addStickerToList(body: GiphyResponse) {
+    override fun addStickerToList(body: GiphyResponse, position: Int) {
         val temp = EmoticonData(
             mutableListOf(
-                body.data[0].images.original.url,
-                body.data[1].images.original.url
+                body.data[0].images.the480WStill.url,
+                body.data[1].images.the480WStill.url
             ), mutableListOf()
         )
         for (i in body.data) {
-            temp.emoticon.add(i.images.downsized_medium.url)
+            temp.emoticon.add(i.images.the480WStill.url)
         }
-        Log.d("test", temp.toString())
         itemList.add(temp)
-        setData()
+
+        if (position == size){
+            setData()
+        }
+
     }
 }
 
@@ -240,12 +258,12 @@ class EmoticonObjectRecyclerViewAdapter(val context: Context, val imageList: Mut
             .load(imageList[position])
             .into(holder.emoticonImage!!)
 
-        if (selectedItemPosition == position){
-            holder.emoticonImage?.setBackgroundColor(Color.GRAY)
-        }
-        else{
-            holder.emoticonImage?.setBackgroundColor(Color.TRANSPARENT)
-        }
+//        if (selectedItemPosition == position){
+//            holder.emoticonImage?.setBackgroundColor(Color.GRAY)
+//        }
+//        else{
+//            holder.emoticonImage?.setBackgroundColor(Color.TRANSPARENT)
+//        }
 
         holder.emoticonImage?.setOnClickListener {
             toggleItemSelected(position)

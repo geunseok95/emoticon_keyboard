@@ -4,9 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.media.AudioManager
-import android.os.Build
-import android.os.Handler
-import android.os.SystemClock
+import android.os.*
 import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -28,11 +26,14 @@ class KoreanCustomView constructor(var context:Context, var layoutInflater: Layo
     var buttons:MutableList<Button> = mutableListOf<Button>()
     lateinit var hangulMaker: HangulMaker
     lateinit var sharedPreferences: SharedPreferences
+    lateinit var vibrator: Vibrator
+
     var inputConnection:InputConnection? = null
         set(inputConnection){
             field = inputConnection
         }
     var sound = 0
+    var vibrate = 0
     val numpadText = listOf<String>("1","2","3","4","5","6","7","8","9","0")
     val firstLineText = listOf<String>("ㅂ","ㅈ","ㄷ","ㄱ","ㅅ","ㅛ","ㅕ","ㅑ","ㅐ","ㅔ")
     val secondLineText = listOf<String>("ㅁ","ㄴ","ㅇ","ㄹ","ㅎ","ㅗ","ㅓ","ㅏ","ㅣ")
@@ -50,8 +51,10 @@ class KoreanCustomView constructor(var context:Context, var layoutInflater: Layo
     fun init(){
         koreanLayout = layoutInflater.inflate(R.layout.layout_english_keyboard, null) as LinearLayout
         hangulMaker = HangulMaker(inputConnection!!)
+        vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
 
         sharedPreferences = context.getSharedPreferences("setting", Context.MODE_PRIVATE)
+        vibrate = sharedPreferences.getInt("keyboardVibrate", -1)
 
         val height = sharedPreferences.getInt("keyboardHeight", 150)
         val config = context.getResources().configuration
@@ -181,12 +184,24 @@ class KoreanCustomView constructor(var context:Context, var layoutInflater: Layo
         }
     }
 
+    private fun playVibrate(){
+        if(vibrate > 0){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                vibrator.vibrate(VibrationEffect.createOneShot(70, vibrate))
+            }
+            else{
+                vibrator.vibrate(70)
+            }
+        }
+    }
+
     private fun getMyClickListener(actionButton: Button): View.OnClickListener{
 
         val clickListener = (View.OnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 inputConnection?.requestCursorUpdates(InputConnection.CURSOR_UPDATE_IMMEDIATE)
             }
+            playVibrate()
             val cursorcs:CharSequence? =  inputConnection?.getSelectedText(InputConnection.GET_TEXT_WITH_STYLES)
             if(cursorcs != null && cursorcs.length >= 2){
 
@@ -313,7 +328,7 @@ class KoreanCustomView constructor(var context:Context, var layoutInflater: Layo
                     "!#1" -> {
                         actionButton.text = myText[item]
                         buttons.add(actionButton)
-                        myOnClickListener = View.OnClickListener { keyboardInteractionListener.modeChange(0) }
+                        myOnClickListener = View.OnClickListener { keyboardInteractionListener.modeChange(3) }
                         actionButton.setOnClickListener(myOnClickListener)
                     }
                     else -> {
@@ -330,12 +345,14 @@ class KoreanCustomView constructor(var context:Context, var layoutInflater: Layo
     fun getSpaceAction():View.OnClickListener{
         return View.OnClickListener{
             playClick('ㅂ'.toInt())
+            playVibrate()
             hangulMaker.commitSpace()
         }
     }
 
     fun getDeleteAction():View.OnClickListener{
         return View.OnClickListener{
+            playVibrate()
             val cursorcs:CharSequence? =  inputConnection?.getSelectedText(InputConnection.GET_TEXT_WITH_STYLES)
             if(cursorcs != null && cursorcs.length >= 2){
 
@@ -357,12 +374,14 @@ class KoreanCustomView constructor(var context:Context, var layoutInflater: Layo
 
     fun getCapsAction():View.OnClickListener{
         return View.OnClickListener{
+            playVibrate()
             modechange()
         }
     }
 
     fun getEnterAction():View.OnClickListener{
         return View.OnClickListener{
+            playVibrate()
             hangulMaker.directlyCommit()
             val eventTime = SystemClock.uptimeMillis()
             inputConnection?.sendKeyEvent(KeyEvent(eventTime, eventTime,

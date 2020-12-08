@@ -10,13 +10,15 @@ interface EmoticonCustomViewRetrofitInterface {
     // 인기있는 Sticker 불러오기
     @GET("trending")
     fun getTrendingStickers(
-        @Query("api_key") api_key: String
+        @Query("api_key") api_key: String,
+        @Query("limit") limit: Int
     ): Call<GiphyResponse>
 
     // 특정 Sticker 불러오기
     @GET("search")
     fun getCertainSticker(
         @Query("api_key") api_key: String,
-        @Query("q") q: String
+        @Query("q") q: String,
+        @Query("limit") limit: Int
     ): Call<GiphyResponse>
 }

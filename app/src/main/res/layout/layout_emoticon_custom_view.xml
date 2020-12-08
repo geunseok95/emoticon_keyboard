@@ -7,6 +7,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
+        android:id="@+id/emoticon_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:weightSum="14"
@@ -87,6 +88,7 @@
         android:id="@+id/emoticon_view_pager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#F9F9F9" />
+        android:background="#ffffff" />
+
 
 </LinearLayout>

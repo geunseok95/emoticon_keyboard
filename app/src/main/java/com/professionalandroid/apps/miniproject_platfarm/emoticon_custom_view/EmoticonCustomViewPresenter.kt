@@ -14,8 +14,8 @@ class EmoticonCustomViewPresenter(val mEmoticonCustomViewView: EmoticonCustomVie
     val mEmoticonCustomViewRetrofitInterface = ApplicationClass.retrofitService()!!.create(
         EmoticonCustomViewRetrofitInterface::class.java)
 
-    fun getTrendingStickerFromGiphy() {
-        mEmoticonCustomViewRetrofitInterface.getTrendingStickers(api_key)
+    fun getTrendingStickerFromGiphy(position: Int, limit: Int) {
+        mEmoticonCustomViewRetrofitInterface.getTrendingStickers(api_key, limit)
             .enqueue(object :
                 Callback<GiphyResponse> {
                 override fun onFailure(call: Call<GiphyResponse>, t: Throwable) {
@@ -28,22 +28,27 @@ class EmoticonCustomViewPresenter(val mEmoticonCustomViewView: EmoticonCustomVie
                 ) {
                     val body = response.body()
                     if (body != null) {
-                        mEmoticonCustomViewView.addStickerToList(body)
+                        mEmoticonCustomViewView.addStickerToList(body, position)
                     }
+                    response.errorBody()?.string()
                 }
             })
     }
 
-    fun getCertainStickerFromGiphy(q: String){
-        mEmoticonCustomViewRetrofitInterface.getCertainSticker(api_key, q).enqueue(object : Callback<GiphyResponse>{
+    fun getCertainStickerFromGiphy(q: String, position: Int, limit: Int){
+        mEmoticonCustomViewRetrofitInterface.getCertainSticker(api_key, q, limit).enqueue(object : Callback<GiphyResponse>{
             override fun onFailure(call: Call<GiphyResponse>, t: Throwable) {
                 Log.d("test", "Certain sticker 불러오기 실패")
             }
 
             override fun onResponse(call: Call<GiphyResponse>, response: Response<GiphyResponse>) {
-                TODO("Not yet implemented")
+                val body = response.body()
+                //Log.d("test", body.toString())
+                if (body != null) {
+                    mEmoticonCustomViewView.addStickerToList(body, position)
+                }
+                response.errorBody()?.string()
             }
-
         })
     }
 
