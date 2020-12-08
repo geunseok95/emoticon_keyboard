@@ -71,13 +71,12 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
         mEmoticonShop = findViewById(R.id.shop)
         mKeyboardChange = findViewById(R.id.changeKeyBoard)
 
-
         // getSticker
         if (itemList.size == 0) {
-            mEmoticonCustomViewPresenter.getTrendingStickerFromGiphy(0, 15)
+            mEmoticonCustomViewPresenter.getTrendingStickerFromGiphy(0, 5)
 
             for (i in templist.indices) {
-                mEmoticonCustomViewPresenter.getCertainStickerFromGiphy(templist[i], i + 1, 15)
+                mEmoticonCustomViewPresenter.getCertainStickerFromGiphy(templist[i], i + 1, 5)
             }
         }
         else{
@@ -88,6 +87,7 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
     // setData
     fun setData(){
 
+        Log.d("test", "setData")
         mEmoticonTabLayout = emoticonCustomView!!.findViewById<TabLayout>(R.id.emoticon_tab_layout)
 
         val config = context.resources.configuration
@@ -115,8 +115,8 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
             mEmoticonViewPager2 = emoticonCustomView!!.findViewById<ViewPager2>(R.id.emoticon_view_pager).apply {
                 adapter = mEmotionCustomViewPagerAdapter
             }
-            mEmoticonTabLayoutContainer?.layoutParams = LayoutParams(0, height / 8, 11f)
-            mEmoticonSubContainer?.layoutParams = LayoutParams(0, LayoutParams.WRAP_CONTENT, 3f).apply {
+            mEmoticonTabLayoutContainer?.layoutParams = LayoutParams(0, height / 8, 10.5f)
+            mEmoticonSubContainer?.layoutParams = LayoutParams(0, LayoutParams.WRAP_CONTENT, 3.5f).apply {
                     gravity = Gravity.CENTER
             }
             mEmoticonTabLayout?.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, height / 8)
@@ -189,8 +189,10 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
             temp.emoticon.add(i.images.the480WStill.url)
         }
         itemList.add(temp)
+        Log.d("test", "$position $temp")
 
-        if (position == size){
+        if (itemList.size == size + 1){
+            Log.d("test", "${itemList.size} ${position}" )
             setData()
         }
 
