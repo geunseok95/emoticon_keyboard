@@ -18,7 +18,7 @@
         <LinearLayout
             android:id="@+id/emoticon_tab_layout_container"
             android:layout_width="0dp"
-            android:layout_weight="10"
+            android:layout_weight="9"
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:paddingStart="10dp">
@@ -44,7 +44,7 @@
         <LinearLayout
             android:id="@+id/emoticon_sub_container"
             android:layout_width="0dp"
-            android:layout_weight="2"
+            android:layout_weight="3"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|end"
             android:background="@color/white">
@@ -52,7 +52,15 @@
             <LinearLayout
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="@color/grey"/>
+                android:background="@color/gray"/>
+
+            <ImageView
+                android:id="@+id/changeKeyBoard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:padding="3dp"
+                android:src="@drawable/ic_baseline_autorenew_24"/>
 
             <ImageView
                 android:id="@+id/setting"

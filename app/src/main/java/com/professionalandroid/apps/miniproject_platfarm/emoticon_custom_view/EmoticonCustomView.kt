@@ -2,8 +2,10 @@ package com.professionalandroid.apps.miniproject_platfarm.emoticon_custom_view
 
 import android.content.Context
 import android.content.res.Configuration
+import android.graphics.Color
 import android.util.AttributeSet
 import android.util.Log
+import android.util.SparseBooleanArray
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +20,7 @@ import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.professionalandroid.apps.miniproject_platfarm.ApplicationClass
+import com.professionalandroid.apps.miniproject_platfarm.KeyboardInteractionListener
 import com.professionalandroid.apps.miniproject_platfarm.R
 import com.professionalandroid.apps.miniproject_platfarm.emoticon_custom_view.interfaces.EmoticonCustomViewRetrofitInterface
 import com.professionalandroid.apps.miniproject_platfarm.emoticon_custom_view.modles.EmoticonData
@@ -28,6 +31,11 @@ import retrofit2.Response
 
 open class EmoticonCustomView @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, defStyleAttr: Int = 0)
     : LinearLayout(context, attributeSet, defStyleAttr), EmoticonObjectRecyclerViewAdapter.ItemSelected {
+
+
+    constructor(context: Context, keyboardInteractionListener: KeyboardInteractionListener): this(context){
+
+    }
 
     var emoticonCustomView: LinearLayout? = null
     var inputConnection: InputConnection? = null
@@ -40,6 +48,7 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
     var mEmoticonViewPager2: ViewPager2? = null
     var mEmoticonSetting: ImageView? = null
     var mEmoticonShop: ImageView? = null
+    var mKeyboardChange: ImageView? = null
     var mEmotionCustomViewPagerAdapter: EmoticonCustomViewPagerAdapter? = null
 
     init {
@@ -48,6 +57,7 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
         mEmoticonSubContainer = findViewById(R.id.emoticon_sub_container)
         mEmoticonSetting = findViewById(R.id.setting)
         mEmoticonShop = findViewById(R.id.shop)
+        mKeyboardChange = findViewById(R.id.changeKeyBoard)
 
         val mEmoticonCustomViewRetrofitInterface = ApplicationClass.retrofitService()!!.create(
             EmoticonCustomViewRetrofitInterface::class.java)
@@ -96,20 +106,26 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
             mEmoticonViewPager2?.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, height / 2)
             mEmoticonSetting?.layoutParams = LayoutParams(height / 15, height / 15)
             mEmoticonShop?.layoutParams = LayoutParams(height / 15, height / 15)
+            mKeyboardChange?.layoutParams = LayoutParams(height / 15, height / 15)
         }
         else{   // 세로화면
             mEmotionCustomViewPagerAdapter = EmoticonCustomViewPagerAdapter(context, itemList, this, 3)  // 세로에는 이모티콘 3개씩
             mEmoticonViewPager2 = emoticonCustomView!!.findViewById<ViewPager2>(R.id.emoticon_view_pager).apply {
                 adapter = mEmotionCustomViewPagerAdapter
             }
-            mEmoticonTabLayoutContainer?.layoutParams = LayoutParams(0, height / 8, 10f)
-            mEmoticonSubContainer?.layoutParams = LayoutParams(0, LayoutParams.WRAP_CONTENT, 2f).apply {
+            mEmoticonTabLayoutContainer?.layoutParams = LayoutParams(0, height / 8, 19f)
+            mEmoticonSubContainer?.layoutParams = LayoutParams(0, LayoutParams.WRAP_CONTENT, 3f).apply {
                     gravity = Gravity.CENTER
             }
             mEmoticonTabLayout?.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, height / 8)
             mEmoticonViewPager2?.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, height)
             mEmoticonSetting?.layoutParams = LayoutParams(height / 15, height / 15)
             mEmoticonShop?.layoutParams = LayoutParams(height / 15, height / 15)
+            mKeyboardChange?.layoutParams = LayoutParams(height / 15, height / 15)
+        }
+
+        mKeyboardChange?.setOnClickListener {
+
         }
 
         // TabLayout과 ViewPager 연결
@@ -199,6 +215,8 @@ class EmoticonCustomViewPagerAdapter(val context: Context, val itemList: Mutable
 // RecyclerView Adapter in ViewPager
 class EmoticonObjectRecyclerViewAdapter(val context: Context, val imageList: MutableList<String>, val parent_position: Int, val listener: ItemSelected): RecyclerView.Adapter<EmoticonObjectRecyclerViewAdapter.ViewHolder>() {
 
+    var selectedItemPosition: Int? = null
+
     // 이모티콘 click interface
     interface ItemSelected{
         fun itemSelected(parent_position: Int, position: Int)
@@ -225,9 +243,24 @@ class EmoticonObjectRecyclerViewAdapter(val context: Context, val imageList: Mut
             .load(imageList[position])
             .into(holder.emoticonImage!!)
 
+        if (selectedItemPosition == position){
+            holder.emoticonImage?.setBackgroundColor(Color.GRAY)
+        }
+        else{
+            holder.emoticonImage?.setBackgroundColor(Color.TRANSPARENT)
+        }
+
         holder.emoticonImage?.setOnClickListener {
+            toggleItemSelected(position)
             listener.itemSelected(parent_position, position)
         }
 
+    }
+
+    fun toggleItemSelected(position:Int){
+        if(position != selectedItemPosition){
+            selectedItemPosition = position
+        }
+        notifyItemChanged(position)
     }
 }
