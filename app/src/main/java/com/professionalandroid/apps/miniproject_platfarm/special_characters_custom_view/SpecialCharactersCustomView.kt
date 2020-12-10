@@ -43,7 +43,7 @@ class SpecialCharactersCustomView constructor(var context:Context, var layoutInf
         specialCharactersLayout = layoutInflater.inflate(R.layout.layout_korean_special_characters, null) as LinearLayout
         inputConnection = inputConnection
 
-        val config = context.getResources().configuration
+        val config = context.resources.configuration
         val sharedPreferences = context.getSharedPreferences("setting", Context.MODE_PRIVATE)
         val height = sharedPreferences.getInt("keyboardHeight", 150)
         animationMode = sharedPreferences.getInt("theme", 0)
@@ -293,6 +293,4 @@ class SpecialCharactersCustomView constructor(var context:Context, var layoutInf
                 KeyEvent.FLAG_SOFT_KEYBOARD))
         }
     }
-
-
 }

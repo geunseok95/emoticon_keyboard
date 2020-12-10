@@ -96,7 +96,7 @@ class EmojiCustomView constructor(var context:Context, var layoutInflater: Layou
     }
 
     private fun setLayoutComponents(unicode: Int, count:Int) {
-        var recyclerView = emojiLayout.findViewById<RecyclerView>(R.id.emoji_recyclerview)
+        val recyclerView = emojiLayout.findViewById<RecyclerView>(R.id.emoji_recyclerview)
         val emojiList = ArrayList<String>()
         val config = context.resources.configuration
         val sharedPreferences = context.getSharedPreferences("setting", Context.MODE_PRIVATE)

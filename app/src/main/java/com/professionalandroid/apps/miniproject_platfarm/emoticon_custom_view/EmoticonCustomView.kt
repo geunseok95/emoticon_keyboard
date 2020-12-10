@@ -73,10 +73,12 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
 
         // getSticker
         if (itemList.size == 0) {
-            mEmoticonCustomViewPresenter.getTrendingStickerFromGiphy(0, 5)
+            // Trending Sticker
+            mEmoticonCustomViewPresenter.getTrendingStickerFromGiphy(0, 15)
 
+            // Certain Sticker
             for (i in templist.indices) {
-                mEmoticonCustomViewPresenter.getCertainStickerFromGiphy(templist[i], i + 1, 5)
+                mEmoticonCustomViewPresenter.getCertainStickerFromGiphy(templist[i], i + 1, 15)
             }
         }
         else{
@@ -90,6 +92,7 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
 
         val config = context.resources.configuration
         val height = 1200
+
 
         if (config.orientation == Configuration.ORIENTATION_LANDSCAPE){ // 가로화면
             mEmotionCustomViewPagerAdapter = EmoticonCustomViewPagerAdapter(context, itemList, this, 6)  // 가로에는 이모티콘 6개씩
@@ -118,7 +121,7 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
                     gravity = Gravity.CENTER
             }
             mEmoticonTabLayout?.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, height / 8)
-            mEmoticonViewPager2?.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, height)
+            mEmoticonViewPager2?.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, height / 2)
             mEmoticonSetting?.layoutParams = LayoutParams(height / 15, height / 15)
             mEmoticonShop?.layoutParams = LayoutParams(height / 15, height / 15)
             mKeyboardChange?.layoutParams = LayoutParams(height / 15, height / 15)
@@ -140,7 +143,7 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
             else {
                 val imageView =  ImageView(context)
                 Glide.with(context)
-                    .load(itemList[position].tabImage[1])
+                    .load(itemList[position].tabImage[0])
                     .into(imageView)
                 tab.customView = imageView
             }
@@ -160,7 +163,7 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 // changing tab icon
                 Glide.with(context)
-                    .load(itemList[tab!!.position].tabImage[1])
+                    .load(itemList[tab!!.position].tabImage[0])
                     .into(tab.customView as ImageView)
             }
         })
@@ -184,11 +187,13 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
             ), mutableListOf()
         )
         for (i in body.data) {
-            temp.emoticon.add(i.images.the480WStill.url)
+            temp.emoticon.add(i.images.original.url)
         }
+        Log.d("test", itemList.size.toString())
         itemList.add(temp)
 
         if (itemList.size == size + 1){
+            Log.d("test", itemList.size.toString())
             setData()
         }
 
@@ -215,7 +220,7 @@ class EmoticonCustomViewPagerAdapter(val context: Context, val itemList: Mutable
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val mAdapter = EmoticonObjectRecyclerViewAdapter(context, itemList[position].emoticon, position, listener)
+        val mAdapter = EmoticonObjectRecyclerViewAdapter(context, itemList[position].emoticon, position, spanCount, listener)
 
         holder.mRecyclerView?.apply {
             layoutManager = GridLayoutManager(context, spanCount)
@@ -226,7 +231,7 @@ class EmoticonCustomViewPagerAdapter(val context: Context, val itemList: Mutable
 
 
 // RecyclerView Adapter in ViewPager
-class EmoticonObjectRecyclerViewAdapter(val context: Context, val imageList: MutableList<String>, val parent_position: Int, val listener: ItemSelected): RecyclerView.Adapter<EmoticonObjectRecyclerViewAdapter.ViewHolder>() {
+class EmoticonObjectRecyclerViewAdapter(val context: Context, val imageList: MutableList<String>, val parent_position: Int, val spanCount: Int, val listener: ItemSelected): RecyclerView.Adapter<EmoticonObjectRecyclerViewAdapter.ViewHolder>() {
 
     var selectedItemPosition: Int? = null
 
@@ -244,6 +249,12 @@ class EmoticonObjectRecyclerViewAdapter(val context: Context, val imageList: Mut
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflateView = LayoutInflater.from(parent.context).inflate(R.layout.layout_emoticon_recyclerview_item, parent,false)
+        val gl: GridLayoutManager.LayoutParams = inflateView.layoutParams as GridLayoutManager.LayoutParams
+        gl.apply {
+            width = parent.measuredWidth / spanCount
+            height = parent.measuredWidth / spanCount
+        }
+        inflateView.layoutParams = gl
         return ViewHolder(inflateView)
     }
 

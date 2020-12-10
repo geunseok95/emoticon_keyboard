@@ -101,7 +101,21 @@ class EmoticonKeyboardService: InputMethodService() {
         super.updateInputViewShown()
         currentInputConnection.finishComposingText()
         keyboardInteractionListener.modeChange(1)
+    }
 
+    override fun onFinishInput() {
+        super.onFinishInput()
+        Log.d("test", "onFinishInput")
+    }
+
+    override fun onFinishInputView(finishingInput: Boolean) {
+        super.onFinishInputView(finishingInput)
+        Log.d("test", "onFinishInputView")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("test", "onDestory")
 
     }
 }
