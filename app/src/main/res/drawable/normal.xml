@@ -6,7 +6,7 @@
                 android:bottomLeftRadius="12dp"
                 android:bottomRightRadius="12dp"
                 android:topLeftRadius="12dp"
-                android:topRightRadius="4dp"></corners>
+                android:topRightRadius="4dp" />
             <solid android:color="@color/keyboardBoarder"/>
         </shape>
     </item>
@@ -16,7 +16,7 @@
                 android:bottomLeftRadius="4dp"
                 android:bottomRightRadius="4dp"
                 android:topLeftRadius="4dp"
-                android:topRightRadius="4dp"></corners>
+                android:topRightRadius="4dp" />
             <solid android:color="@color/keyboardDivider"/>
         </shape>
     </item>

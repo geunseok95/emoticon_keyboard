@@ -10,8 +10,11 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.core.view.children
+import androidx.core.view.setPadding
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.professionalandroid.apps.miniproject_platfarm.ApplicationClass
+import com.professionalandroid.apps.miniproject_platfarm.ApplicationClass.Companion.ConvertDPtoPX
 import com.professionalandroid.apps.miniproject_platfarm.KeyboardInteractionListener
 
 class EmojiCustomView constructor(var context:Context, var layoutInflater: LayoutInflater, var keyboardInteractionListener: KeyboardInteractionListener){
@@ -26,13 +29,11 @@ class EmojiCustomView constructor(var context:Context, var layoutInflater: Layou
     lateinit var emojiRecyclerViewAdapter: EmojiRecyclerViewAdapter
     val fourthLineText = listOf<String>("한/영",getEmojiByUnicode(0x1F600), getEmojiByUnicode(0x1F466), getEmojiByUnicode(0x1F91A), getEmojiByUnicode(0x1F423),getEmojiByUnicode(0x1F331), getEmojiByUnicode(0x1F682),"DEL")
     var vibrate = 100
-    var sound = 0
+    var sound = 32
 
     fun init() {
         emojiLayout = layoutInflater.inflate(R.layout.layout_emoji_keyboard, null) as LinearLayout
         vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        val sharedPreferences = context.getSharedPreferences("setting", Context.MODE_PRIVATE)
-        sound = sharedPreferences.getInt("sound", -1)
 
         val fourthLine = emojiLayout.findViewById<LinearLayout>(
                 R.id.fourth_line
@@ -42,13 +43,17 @@ class EmojiCustomView constructor(var context:Context, var layoutInflater: Layou
             val actionButton = children[item].findViewById<Button>(R.id.key_button)
             val specialKey = children[item].findViewById<ImageView>(R.id.special_key)
             if(fourthLineText[item] == "DEL"){
-                actionButton.setBackgroundResource(R.drawable.del)
                 val myOnClickListener = getDeleteAction()
-                actionButton.setOnClickListener(myOnClickListener)
+                specialKey.apply {
+                    setImageResource(R.drawable.del)
+                    setOnClickListener(myOnClickListener)
+                    specialKey.visibility = View.VISIBLE
+                }
+                actionButton.visibility = View.GONE
             }
             else{
                 actionButton.text = fourthLineText[item]
-                actionButton.setOnClickListener(View.OnClickListener {
+                actionButton.setOnClickListener {
                     when((it as Button).text){
                         "한/영" -> {
                             keyboardInteractionListener.modeChange(1)
@@ -72,7 +77,7 @@ class EmojiCustomView constructor(var context:Context, var layoutInflater: Layou
                             setLayoutComponents(0x1F682, 64)
                         }
                     }
-                })
+                }
             }
         }
         setLayoutComponents(0x1F600, 79)
@@ -98,7 +103,6 @@ class EmojiCustomView constructor(var context:Context, var layoutInflater: Layou
         val emojiList = ArrayList<String>()
         val config = context.resources.configuration
         val sharedPreferences = context.getSharedPreferences("setting", Context.MODE_PRIVATE)
-        val height = sharedPreferences.getInt("keyboardHeight", 150)
 
 //            unicode = 0x1F600
 //            val unicode = 0x1F48B
@@ -112,7 +116,7 @@ class EmojiCustomView constructor(var context:Context, var layoutInflater: Layou
         val gm = GridLayoutManager(context,8)
         gm.isItemPrefetchEnabled = true
         recyclerView.layoutManager = gm
-        recyclerView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, height * 5)
+        recyclerView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ConvertDPtoPX(context, 50) * 5)
     }
 
     fun getEmojiByUnicode(unicode: Int): String {

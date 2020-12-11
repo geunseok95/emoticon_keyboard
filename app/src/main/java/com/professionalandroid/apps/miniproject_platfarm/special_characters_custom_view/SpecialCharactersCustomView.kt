@@ -14,6 +14,8 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.core.view.children
+import com.professionalandroid.apps.miniproject_platfarm.ApplicationClass
+import com.professionalandroid.apps.miniproject_platfarm.ApplicationClass.Companion.ConvertDPtoPX
 import com.professionalandroid.apps.miniproject_platfarm.KeyboardInteractionListener
 import com.professionalandroid.apps.miniproject_platfarm.R
 
@@ -26,6 +28,7 @@ class SpecialCharactersCustomView constructor(var context:Context, var layoutInf
     var isCaps:Boolean = false
     var buttons:MutableList<Button> = mutableListOf<Button>()
 
+    lateinit var vibrator: Vibrator
     val numpadText = listOf<String>("1","2","3","4","5","6","7","8","9","0")
     val firstLineText = listOf<String>("+","×","÷","=","/","￦","<",">","♡","☆")
     val secondLineText = listOf<String>("!","@","#","~","%","^","&","*","(",")")
@@ -35,20 +38,18 @@ class SpecialCharactersCustomView constructor(var context:Context, var layoutInf
     val layoutLines = ArrayList<LinearLayout>()
     var downView:View? = null
     var animationMode:Int = 0
-    var vibrate = 0
-    var sound = 0
+    var vibrate = 100
+    var sound = 32
     var capsView:ImageView? = null
 
     fun init(){
         specialCharactersLayout = layoutInflater.inflate(R.layout.layout_korean_special_characters, null) as LinearLayout
+        vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         inputConnection = inputConnection
 
         val config = context.resources.configuration
         val sharedPreferences = context.getSharedPreferences("setting", Context.MODE_PRIVATE)
-        val height = sharedPreferences.getInt("keyboardHeight", 150)
         animationMode = sharedPreferences.getInt("theme", 0)
-        sound = sharedPreferences.getInt("keyboardSound", -1)
-        vibrate = sharedPreferences.getInt("keyboardVibrate", -1)
 
         val numpadLine = specialCharactersLayout.findViewById<LinearLayout>(
             R.id.numpad_line
@@ -67,13 +68,13 @@ class SpecialCharactersCustomView constructor(var context:Context, var layoutInf
         )
 
         if(config.orientation == Configuration.ORIENTATION_LANDSCAPE){
-            firstLine.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (height*0.7).toInt())
-            secondLine.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (height*0.7).toInt())
-            thirdLine.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (height*0.7).toInt())
+            firstLine.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ConvertDPtoPX(context, 50))
+            secondLine.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ConvertDPtoPX(context, 50))
+            thirdLine.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ConvertDPtoPX(context, 50))
         }else{
-            firstLine.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, height)
-            secondLine.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, height)
-            thirdLine.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, height)
+            firstLine.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ConvertDPtoPX(context, 50))
+            secondLine.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ConvertDPtoPX(context, 50))
+            thirdLine.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ConvertDPtoPX(context, 50))
         }
 
         myKeysText.clear()
@@ -107,7 +108,18 @@ class SpecialCharactersCustomView constructor(var context:Context, var layoutInf
         else{
             isCaps = true
             for(button in buttons){
-                button.setText(button.text.toString().toUpperCase())
+                button.text = button.text.toString().toUpperCase()
+            }
+        }
+    }
+
+    private fun playVibrate(){
+        if(vibrate > 0){
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N_MR1) {
+                vibrator.vibrate(VibrationEffect.createOneShot(70, vibrate))
+            }
+            else{
+                vibrator.vibrate(70)
             }
         }
     }
@@ -118,7 +130,7 @@ class SpecialCharactersCustomView constructor(var context:Context, var layoutInf
             32 -> am!!.playSoundEffect(AudioManager.FX_KEYPRESS_SPACEBAR)
             Keyboard.KEYCODE_DONE, 10 -> am!!.playSoundEffect(AudioManager.FX_KEYPRESS_RETURN)
             Keyboard.KEYCODE_DELETE -> am!!.playSoundEffect(AudioManager.FX_KEYPRESS_DELETE)
-            else -> am!!.playSoundEffect(AudioManager.FX_KEYPRESS_STANDARD, -1.toFloat())
+            else -> am!!.playSoundEffect(AudioManager.FX_KEYPRESS_STANDARD, (-1).toFloat())
         }
     }
 
@@ -128,6 +140,7 @@ class SpecialCharactersCustomView constructor(var context:Context, var layoutInf
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 inputConnection?.requestCursorUpdates(InputConnection.CURSOR_UPDATE_IMMEDIATE)
             }
+            playVibrate()
             val cursorcs:CharSequence? =  inputConnection?.getSelectedText(InputConnection.GET_TEXT_WITH_STYLES)
             if(cursorcs != null && cursorcs.length >= 2){
 

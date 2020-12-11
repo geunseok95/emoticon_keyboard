@@ -1,9 +1,11 @@
 package com.professionalandroid.apps.miniproject_platfarm
 
 import android.app.Application
+import android.content.Context
 import android.content.SharedPreferences
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import kotlin.math.roundToInt
 
 class ApplicationClass: Application() {
 
@@ -29,6 +31,11 @@ class ApplicationClass: Application() {
                     .build()
             }
             return retrofit
+        }
+
+        fun ConvertDPtoPX(context: Context, dp: Int): Int {
+            val density = context.resources.displayMetrics.density
+            return (dp.toFloat() * density).roundToInt()
         }
 
         var TAG = "KEYBOARD_APP"

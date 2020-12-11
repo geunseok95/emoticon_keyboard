@@ -16,6 +16,8 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.children
+import com.professionalandroid.apps.miniproject_platfarm.ApplicationClass
+import com.professionalandroid.apps.miniproject_platfarm.ApplicationClass.Companion.ConvertDPtoPX
 import com.professionalandroid.apps.miniproject_platfarm.KeyboardInteractionListener
 import com.professionalandroid.apps.miniproject_platfarm.R
 import java.util.*
@@ -29,7 +31,6 @@ class EnglishCustomView constructor(var context: Context, var layoutInflater: La
         }
 
     lateinit var vibrator: Vibrator
-    lateinit var sharedPreferences: SharedPreferences
     var isCaps:Boolean = false
     var buttons:MutableList<Button> = mutableListOf<Button>()
 
@@ -46,7 +47,7 @@ class EnglishCustomView constructor(var context: Context, var layoutInflater: La
     val layoutLines = ArrayList<LinearLayout>()
     var downView: View? = null
     var vibrate = 100
-    var sound = 0
+    var sound = 32
     var capsView: ImageView? = null
 
     fun init() {
@@ -54,10 +55,6 @@ class EnglishCustomView constructor(var context: Context, var layoutInflater: La
         vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
 
         val config = context.resources.configuration
-        sharedPreferences = context.getSharedPreferences("setting", Context.MODE_PRIVATE)
-        val height = 150
-                // sharedPreferences.getInt("keyboardHeight", 150)
-        sound = sharedPreferences.getInt("keyboardSound", -1)
 
         val numpadLine = englishLayout.findViewById<LinearLayout>(
             R.id.numpad_line
@@ -76,13 +73,13 @@ class EnglishCustomView constructor(var context: Context, var layoutInflater: La
         )
 
         if(config.orientation == Configuration.ORIENTATION_LANDSCAPE){
-            firstLine.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (height*0.7).toInt())
-            secondLine.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (height*0.7).toInt())
-            thirdLine.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (height*0.7).toInt())
+            firstLine.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ConvertDPtoPX(context, 50))
+            secondLine.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ConvertDPtoPX(context, 50))
+            thirdLine.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ConvertDPtoPX(context, 50))
         }else{
-            firstLine.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, height)
-            secondLine.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, height)
-            thirdLine.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, height)
+            firstLine.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ConvertDPtoPX(context, 50))
+            secondLine.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ConvertDPtoPX(context, 50))
+            thirdLine.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ConvertDPtoPX(context, 50))
         }
 
         myKeysText.clear()

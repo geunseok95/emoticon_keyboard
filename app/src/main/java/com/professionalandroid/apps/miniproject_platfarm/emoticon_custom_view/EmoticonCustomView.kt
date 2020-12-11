@@ -18,12 +18,12 @@ import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.professionalandroid.apps.miniproject_platfarm.ApplicationClass.Companion.ConvertDPtoPX
 import com.professionalandroid.apps.miniproject_platfarm.KeyboardInteractionListener
 import com.professionalandroid.apps.miniproject_platfarm.R
 import com.professionalandroid.apps.miniproject_platfarm.emoticon_custom_view.interfaces.EmoticonCustomViewView
 import com.professionalandroid.apps.miniproject_platfarm.emoticon_custom_view.modles.EmoticonData
 import com.professionalandroid.apps.miniproject_platfarm.emoticon_custom_view.modles.GiphyResponse
-import kotlin.math.roundToInt
 
 open class EmoticonCustomView @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, defStyleAttr: Int = 0)
     : LinearLayout(context, attributeSet, defStyleAttr), EmoticonObjectRecyclerViewAdapter.ItemSelected , EmoticonCustomViewView{
@@ -91,15 +91,15 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
             mEmoticonViewPager2 = emoticonCustomView!!.findViewById<ViewPager2>(R.id.emoticon_view_pager).apply {
                 adapter = mEmotionCustomViewPagerAdapter
             }
-            mEmoticonTabLayoutContainer?.layoutParams = LayoutParams(0, 150, 1f)
-            mEmoticonSubContainer?.layoutParams = LayoutParams(350, LayoutParams.WRAP_CONTENT).apply {
+            mEmoticonTabLayoutContainer?.layoutParams = LayoutParams(0, ConvertDPtoPX(context, 40), 1f)
+            mEmoticonSubContainer?.layoutParams = LayoutParams(ConvertDPtoPX(context, 80), LayoutParams.WRAP_CONTENT).apply {
                 gravity = Gravity.CENTER
             }
-            mEmoticonTabLayout?.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, 150)
-            mEmoticonViewPager2?.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, 600)
-            mEmoticonSetting?.layoutParams = LayoutParams(100, 100)
-            mEmoticonShop?.layoutParams = LayoutParams(100, 100)
-            mKeyboardChange?.layoutParams = LayoutParams(100, 100)
+            mEmoticonTabLayout?.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, ConvertDPtoPX(context, 40))
+            mEmoticonViewPager2?.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, ConvertDPtoPX(context, 150))
+            mEmoticonSetting?.layoutParams = LayoutParams(ConvertDPtoPX(context, 24), ConvertDPtoPX(context, 24))
+            mEmoticonShop?.layoutParams = LayoutParams(ConvertDPtoPX(context, 24), ConvertDPtoPX(context, 24))
+            mKeyboardChange?.layoutParams = LayoutParams(ConvertDPtoPX(context, 24), ConvertDPtoPX(context, 24))
 
         }
         else{   // 세로화면
@@ -107,15 +107,15 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
             mEmoticonViewPager2 = emoticonCustomView!!.findViewById<ViewPager2>(R.id.emoticon_view_pager).apply {
                 adapter = mEmotionCustomViewPagerAdapter
             }
-            mEmoticonTabLayoutContainer?.layoutParams = LayoutParams(0, 150, 1f)
-            mEmoticonSubContainer?.layoutParams = LayoutParams(350, LayoutParams.WRAP_CONTENT).apply {
+            mEmoticonTabLayoutContainer?.layoutParams = LayoutParams(0, ConvertDPtoPX(context, 40), 1f)
+            mEmoticonSubContainer?.layoutParams = LayoutParams(ConvertDPtoPX(context, 80), LayoutParams.WRAP_CONTENT).apply {
                 gravity = Gravity.CENTER
             }
-            mEmoticonTabLayout?.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, 150)
-            mEmoticonViewPager2?.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, 800)
-            mEmoticonSetting?.layoutParams = LayoutParams(100, 100)
-            mEmoticonShop?.layoutParams = LayoutParams(100, 100)
-            mKeyboardChange?.layoutParams = LayoutParams(100, 100)
+            mEmoticonTabLayout?.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, ConvertDPtoPX(context, 40))
+            mEmoticonViewPager2?.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, ConvertDPtoPX(context, 280))
+            mEmoticonSetting?.layoutParams = LayoutParams(ConvertDPtoPX(context, 24), ConvertDPtoPX(context, 24))
+            mEmoticonShop?.layoutParams = LayoutParams(ConvertDPtoPX(context, 24), ConvertDPtoPX(context, 24))
+            mKeyboardChange?.layoutParams = LayoutParams(ConvertDPtoPX(context, 24), ConvertDPtoPX(context, 24))
         }
 
         mKeyboardChange?.setOnClickListener {
@@ -187,11 +187,6 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
             Log.d("test", itemList.size.toString())
             setData()
         }
-    }
-
-    fun ConvertDPtoPX(context: Context, dp: Int): Int {
-        val density = context.resources.displayMetrics.density
-        return (dp.toFloat() * density).roundToInt()
     }
 }
 
