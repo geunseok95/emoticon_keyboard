@@ -10,7 +10,6 @@
         android:id="@+id/emoticon_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="14"
         android:orientation="horizontal"
         android:background="@color/white"
         android:layout_marginTop="0.5dp"
@@ -18,8 +17,7 @@
 
         <LinearLayout
             android:id="@+id/emoticon_tab_layout_container"
-            android:layout_width="0dp"
-            android:layout_weight="11"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingStart="10dp">
 
@@ -41,8 +39,7 @@
 
         <LinearLayout
             android:id="@+id/emoticon_sub_container"
-            android:layout_width="0dp"
-            android:layout_weight="3"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|end">
 

@@ -5,13 +5,11 @@ import android.content.res.Configuration
 import android.graphics.Color
 import android.util.AttributeSet
 import android.util.Log
-import android.util.SparseBooleanArray
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputConnection
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.GridLayoutManager
@@ -20,21 +18,17 @@ import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.professionalandroid.apps.miniproject_platfarm.ApplicationClass
 import com.professionalandroid.apps.miniproject_platfarm.KeyboardInteractionListener
 import com.professionalandroid.apps.miniproject_platfarm.R
-import com.professionalandroid.apps.miniproject_platfarm.emoticon_custom_view.interfaces.EmoticonCustomViewRetrofitInterface
 import com.professionalandroid.apps.miniproject_platfarm.emoticon_custom_view.interfaces.EmoticonCustomViewView
 import com.professionalandroid.apps.miniproject_platfarm.emoticon_custom_view.modles.EmoticonData
 import com.professionalandroid.apps.miniproject_platfarm.emoticon_custom_view.modles.GiphyResponse
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlin.math.roundToInt
 
 open class EmoticonCustomView @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, defStyleAttr: Int = 0)
     : LinearLayout(context, attributeSet, defStyleAttr), EmoticonObjectRecyclerViewAdapter.ItemSelected , EmoticonCustomViewView{
 
-    val templist = mutableListOf("cheeseburgers", "love", "sad", "OMG", "coffee", "thanks")
+    val templist = mutableListOf("christmas", "love", "sad", "OMG", "coffee", "thanks")
     var size = templist.size
 
     var mEmoticonCustomViewPresenter: EmoticonCustomViewPresenter
@@ -91,40 +85,37 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
         mEmoticonTabLayout = emoticonCustomView!!.findViewById<TabLayout>(R.id.emoticon_tab_layout)
 
         val config = context.resources.configuration
-        val height = 1200
-
 
         if (config.orientation == Configuration.ORIENTATION_LANDSCAPE){ // 가로화면
             mEmotionCustomViewPagerAdapter = EmoticonCustomViewPagerAdapter(context, itemList, this, 6)  // 가로에는 이모티콘 6개씩
             mEmoticonViewPager2 = emoticonCustomView!!.findViewById<ViewPager2>(R.id.emoticon_view_pager).apply {
                 adapter = mEmotionCustomViewPagerAdapter
             }
-            mEmoticonTabLayoutContainer?.layoutParams = LayoutParams(0, height / 8, 12f)
-            mEmoticonSubContainer?.layoutParams = LayoutParams(0, LayoutParams.WRAP_CONTENT, 2f).apply {
+            mEmoticonTabLayoutContainer?.layoutParams = LayoutParams(0, 150, 1f)
+            mEmoticonSubContainer?.layoutParams = LayoutParams(350, LayoutParams.WRAP_CONTENT).apply {
                 gravity = Gravity.CENTER
             }
-            mEmoticonTabLayout?.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, height / 8)
-            mEmoticonViewPager2?.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, height / 2)
-            mEmoticonSetting?.layoutParams = LayoutParams(height / 15, height / 15)
-            mEmoticonShop?.layoutParams = LayoutParams(height / 15, height / 15)
-            mKeyboardChange?.layoutParams = LayoutParams(height / 15, height / 15)
+            mEmoticonTabLayout?.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, 150)
+            mEmoticonViewPager2?.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, 600)
+            mEmoticonSetting?.layoutParams = LayoutParams(100, 100)
+            mEmoticonShop?.layoutParams = LayoutParams(100, 100)
+            mKeyboardChange?.layoutParams = LayoutParams(100, 100)
 
         }
-
         else{   // 세로화면
             mEmotionCustomViewPagerAdapter = EmoticonCustomViewPagerAdapter(context, itemList, this, 3)  // 세로에는 이모티콘 3개씩
             mEmoticonViewPager2 = emoticonCustomView!!.findViewById<ViewPager2>(R.id.emoticon_view_pager).apply {
                 adapter = mEmotionCustomViewPagerAdapter
             }
-            mEmoticonTabLayoutContainer?.layoutParams = LayoutParams(0, height / 8, 10.5f)
-            mEmoticonSubContainer?.layoutParams = LayoutParams(0, LayoutParams.WRAP_CONTENT, 3.5f).apply {
-                    gravity = Gravity.CENTER
+            mEmoticonTabLayoutContainer?.layoutParams = LayoutParams(0, 150, 1f)
+            mEmoticonSubContainer?.layoutParams = LayoutParams(350, LayoutParams.WRAP_CONTENT).apply {
+                gravity = Gravity.CENTER
             }
-            mEmoticonTabLayout?.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, height / 8)
-            mEmoticonViewPager2?.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, height / 2)
-            mEmoticonSetting?.layoutParams = LayoutParams(height / 15, height / 15)
-            mEmoticonShop?.layoutParams = LayoutParams(height / 15, height / 15)
-            mKeyboardChange?.layoutParams = LayoutParams(height / 15, height / 15)
+            mEmoticonTabLayout?.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, 150)
+            mEmoticonViewPager2?.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, 800)
+            mEmoticonSetting?.layoutParams = LayoutParams(100, 100)
+            mEmoticonShop?.layoutParams = LayoutParams(100, 100)
+            mKeyboardChange?.layoutParams = LayoutParams(100, 100)
         }
 
         mKeyboardChange?.setOnClickListener {
@@ -196,7 +187,11 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
             Log.d("test", itemList.size.toString())
             setData()
         }
+    }
 
+    fun ConvertDPtoPX(context: Context, dp: Int): Int {
+        val density = context.resources.displayMetrics.density
+        return (dp.toFloat() * density).roundToInt()
     }
 }
 
@@ -233,7 +228,7 @@ class EmoticonCustomViewPagerAdapter(val context: Context, val itemList: Mutable
 // RecyclerView Adapter in ViewPager
 class EmoticonObjectRecyclerViewAdapter(val context: Context, val imageList: MutableList<String>, val parent_position: Int, val spanCount: Int, val listener: ItemSelected): RecyclerView.Adapter<EmoticonObjectRecyclerViewAdapter.ViewHolder>() {
 
-    var selectedItemPosition: Int? = null
+    var selectedItemPosition = -1
 
     // 이모티콘 click interface
     interface ItemSelected{
@@ -244,6 +239,10 @@ class EmoticonObjectRecyclerViewAdapter(val context: Context, val imageList: Mut
         var emoticonImage: ImageView? = null
         init {
             emoticonImage = view.findViewById(R.id.emoticon_image)
+            emoticonImage?.setOnClickListener {
+                toggleItemSelected(adapterPosition)
+                listener.itemSelected(parent_position, adapterPosition)
+            }
         }
     }
 
@@ -267,24 +266,20 @@ class EmoticonObjectRecyclerViewAdapter(val context: Context, val imageList: Mut
             .load(imageList[position])
             .into(holder.emoticonImage!!)
 
-//        if (selectedItemPosition == position){
-//            holder.emoticonImage?.setBackgroundColor(Color.GRAY)
-//        }
-//        else{
-//            holder.emoticonImage?.setBackgroundColor(Color.TRANSPARENT)
-//        }
-
-        holder.emoticonImage?.setOnClickListener {
-            toggleItemSelected(position)
-            listener.itemSelected(parent_position, position)
+        if (selectedItemPosition == position){
+            holder.emoticonImage?.setBackgroundColor(Color.GRAY)
         }
-
+        else{
+            holder.emoticonImage?.setBackgroundColor(Color.TRANSPARENT)
+        }
     }
 
     fun toggleItemSelected(position:Int){
+        val previous = selectedItemPosition
         if(position != selectedItemPosition){
             selectedItemPosition = position
         }
         notifyItemChanged(position)
+        notifyItemChanged(previous)
     }
 }

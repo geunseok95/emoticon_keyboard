@@ -25,14 +25,13 @@ class EmojiCustomView constructor(var context:Context, var layoutInflater: Layou
 
     lateinit var emojiRecyclerViewAdapter: EmojiRecyclerViewAdapter
     val fourthLineText = listOf<String>("한/영",getEmojiByUnicode(0x1F600), getEmojiByUnicode(0x1F466), getEmojiByUnicode(0x1F91A), getEmojiByUnicode(0x1F423),getEmojiByUnicode(0x1F331), getEmojiByUnicode(0x1F682),"DEL")
-    var vibrate = 0
+    var vibrate = 100
     var sound = 0
 
     fun init() {
         emojiLayout = layoutInflater.inflate(R.layout.layout_emoji_keyboard, null) as LinearLayout
         vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         val sharedPreferences = context.getSharedPreferences("setting", Context.MODE_PRIVATE)
-        vibrate = sharedPreferences.getInt("vibrate", -1)
         sound = sharedPreferences.getInt("sound", -1)
 
         val fourthLine = emojiLayout.findViewById<LinearLayout>(
@@ -76,7 +75,6 @@ class EmojiCustomView constructor(var context:Context, var layoutInflater: Layou
                 })
             }
         }
-
         setLayoutComponents(0x1F600, 79)
     }
 
@@ -86,7 +84,7 @@ class EmojiCustomView constructor(var context:Context, var layoutInflater: Layou
 
     private fun playVibrate(){
         if(vibrate > 0){
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N_MR1) {
                 vibrator.vibrate(VibrationEffect.createOneShot(70, vibrate))
             }
             else{

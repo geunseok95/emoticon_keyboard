@@ -45,7 +45,7 @@ class EnglishCustomView constructor(var context: Context, var layoutInflater: La
     val myLongClickKeysText = ArrayList<List<String>>()
     val layoutLines = ArrayList<LinearLayout>()
     var downView: View? = null
-    var vibrate = 0
+    var vibrate = 100
     var sound = 0
     var capsView: ImageView? = null
 
@@ -55,9 +55,9 @@ class EnglishCustomView constructor(var context: Context, var layoutInflater: La
 
         val config = context.resources.configuration
         sharedPreferences = context.getSharedPreferences("setting", Context.MODE_PRIVATE)
-        val height = sharedPreferences.getInt("keyboardHeight", 150)
+        val height = 150
+                // sharedPreferences.getInt("keyboardHeight", 150)
         sound = sharedPreferences.getInt("keyboardSound", -1)
-        vibrate = sharedPreferences.getInt("keyboardVibrate", -1)
 
         val numpadLine = englishLayout.findViewById<LinearLayout>(
             R.id.numpad_line
@@ -139,7 +139,7 @@ class EnglishCustomView constructor(var context: Context, var layoutInflater: La
 
     private fun playVibrate(){
         if(vibrate > 0){
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N_MR1) {
                 vibrator.vibrate(VibrationEffect.createOneShot(70, vibrate))
             }
             else{

@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import com.professionalandroid.apps.miniproject_platfarm.ApplicationClass.Companion.MODE
+import com.professionalandroid.apps.miniproject_platfarm.ApplicationClass.Companion.sSharedPreferences
 import com.professionalandroid.apps.miniproject_platfarm.emoji_custom_view.EmojiCustomView
 import com.professionalandroid.apps.miniproject_platfarm.emoticon_custom_view.EmoticonCustomView
 import com.professionalandroid.apps.miniproject_platfarm.english_custom_view.EnglishCustomView
@@ -53,6 +55,11 @@ class EmoticonKeyboardService: InputMethodService() {
                     keyboardContainer?.addView(emojiCustomView?.getLayout())
                 }
             }
+            // 키보드 번호를 저장
+            sSharedPreferences!!.edit().apply{
+                putInt(MODE, mode)
+                apply()
+            }
         }
     }
 
@@ -63,7 +70,6 @@ class EmoticonKeyboardService: InputMethodService() {
     // view가 차지할 영역을 정의
     override fun onCreateInputView(): View {
         // view 중복 참조 제거 (화면 회전 시 등)
-
         if (keyboardView != null){
             (keyboardView as ViewGroup).removeAllViews()
         }
@@ -93,14 +99,14 @@ class EmoticonKeyboardService: InputMethodService() {
             inputConnection = currentInputConnection
             init()
         }
-
         return keyboardView!!
     }
 
     override fun updateInputViewShown() {
         super.updateInputViewShown()
+        Log.d("test", "updateInputViewShown")
         currentInputConnection.finishComposingText()
-        keyboardInteractionListener.modeChange(1)
+        keyboardInteractionListener.modeChange(sSharedPreferences?.getInt(MODE, 2)!!)
     }
 
     override fun onFinishInput() {
@@ -115,7 +121,7 @@ class EmoticonKeyboardService: InputMethodService() {
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.d("test", "onDestory")
+        Log.d("test", "onDestroy")
 
     }
 }

@@ -31,7 +31,7 @@ class KoreanCustomView constructor(var context:Context, var layoutInflater: Layo
             field = inputConnection
         }
     var sound = 0
-    var vibrate = 0
+    var vibrate = 100
     val numpadText = listOf<String>("1","2","3","4","5","6","7","8","9","0")
     val firstLineText = listOf<String>("ㅂ","ㅈ","ㄷ","ㄱ","ㅅ","ㅛ","ㅕ","ㅑ","ㅐ","ㅔ")
     val secondLineText = listOf<String>("ㅁ","ㄴ","ㅇ","ㄹ","ㅎ","ㅗ","ㅓ","ㅏ","ㅣ")
@@ -55,7 +55,6 @@ class KoreanCustomView constructor(var context:Context, var layoutInflater: Layo
         vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
 
         sharedPreferences = context.getSharedPreferences("setting", Context.MODE_PRIVATE)
-        vibrate = sharedPreferences.getInt("keyboardVibrate", -1)
 
         val height = sharedPreferences.getInt("keyboardHeight", 150)
         val config = context.getResources().configuration
@@ -190,7 +189,7 @@ class KoreanCustomView constructor(var context:Context, var layoutInflater: Layo
 
     private fun playVibrate(){
         if(vibrate > 0){
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N_MR1) {
                 vibrator.vibrate(VibrationEffect.createOneShot(70, vibrate))
             }
             else{
