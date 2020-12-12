@@ -71,14 +71,12 @@
                 android:src="@drawable/ic_baseline_home_24" />
         </LinearLayout>
 
-
     </LinearLayout>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/emoticon_view_pager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#ffffff" />
-
+        android:background="#E9E9E9" />
 
 </LinearLayout>

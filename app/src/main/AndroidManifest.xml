@@ -3,7 +3,6 @@
     package="com.professionalandroid.apps.miniproject_platfarm">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
@@ -28,8 +27,13 @@
             </intent-filter>
 
         </service>
-        
-        
+
+        <activity android:name=".SearchActivity"
+
+            android:theme="@android:style/Theme.Dialog">
+
+        </activity>
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

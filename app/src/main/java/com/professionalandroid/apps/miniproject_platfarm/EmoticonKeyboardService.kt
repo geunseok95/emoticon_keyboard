@@ -1,5 +1,7 @@
 package com.professionalandroid.apps.miniproject_platfarm
 
+import android.app.Service
+import android.content.Intent
 import android.inputmethodservice.InputMethodService
 import android.util.Log
 import android.view.View
@@ -13,6 +15,7 @@ import com.professionalandroid.apps.miniproject_platfarm.emoji_custom_view.Emoji
 import com.professionalandroid.apps.miniproject_platfarm.emoticon_custom_view.EmoticonCustomView
 import com.professionalandroid.apps.miniproject_platfarm.english_custom_view.EnglishCustomView
 import com.professionalandroid.apps.miniproject_platfarm.korean_custom_view.KoreanCustomView
+import com.professionalandroid.apps.miniproject_platfarm.search_custom_view.SearchCustomView
 import com.professionalandroid.apps.miniproject_platfarm.special_characters_custom_view.SpecialCharactersCustomView
 
 class EmoticonKeyboardService: InputMethodService() {
@@ -24,6 +27,8 @@ class EmoticonKeyboardService: InputMethodService() {
     var koreanKeyboard: KoreanCustomView? = null
     var specialCharactersCustomView: SpecialCharactersCustomView? = null
     var emojiCustomView: EmojiCustomView? = null
+    var searchCustomView: SearchCustomView? = null
+    var searchText = ""
 
     val keyboardInteractionListener = object : KeyboardInteractionListener{
         override fun modeChange(mode: Int) {
@@ -53,6 +58,11 @@ class EmoticonKeyboardService: InputMethodService() {
                     keyboardContainer?.removeAllViews()
                     emojiCustomView?.inputConnection = currentInputConnection
                     keyboardContainer?.addView(emojiCustomView?.getLayout())
+                }
+                5 ->{
+                    keyboardContainer?.removeAllViews()
+                    searchCustomView?.inputConnection = currentInputConnection
+                    keyboardContainer?.addView(searchCustomView?.getLayout())
                 }
             }
             // 키보드 번호를 저장
@@ -99,6 +109,10 @@ class EmoticonKeyboardService: InputMethodService() {
             inputConnection = currentInputConnection
             init()
         }
+
+        searchCustomView = SearchCustomView(applicationContext, keyboardInteractionListener, searchText).apply {
+            inputConnection = currentInputConnection
+        }
         return keyboardView!!
     }
 
@@ -122,6 +136,21 @@ class EmoticonKeyboardService: InputMethodService() {
     override fun onDestroy() {
         super.onDestroy()
         Log.d("test", "onDestroy")
+
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        searchText = intent?.getStringExtra("search")!!
+        if(searchText != ""){
+            searchCustomView = SearchCustomView(applicationContext, keyboardInteractionListener, searchText).apply {
+                inputConnection = currentInputConnection
+            }
+            keyboardInteractionListener.modeChange(5)
+        }
+        else{
+            keyboardInteractionListener.modeChange(sSharedPreferences?.getInt(MODE, 2)!!)
+        }
+        return Service.START_STICKY
 
     }
 }

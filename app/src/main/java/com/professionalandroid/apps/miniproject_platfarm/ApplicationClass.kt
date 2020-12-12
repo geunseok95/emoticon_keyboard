@@ -1,11 +1,14 @@
 package com.professionalandroid.apps.miniproject_platfarm
 
+import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import android.os.Bundle
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import kotlin.math.roundToInt
+
 
 class ApplicationClass: Application() {
 
@@ -43,6 +46,7 @@ class ApplicationClass: Application() {
         var sSharedPreferences: SharedPreferences? = null
 
         var MODE = "MODE-NUMBER"
+        
     }
 
 
