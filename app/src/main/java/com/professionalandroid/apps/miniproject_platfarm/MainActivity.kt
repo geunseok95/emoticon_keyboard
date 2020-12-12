@@ -10,6 +10,15 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
     }
 
+    override fun onResume() {
+        super.onResume()
+        Log.d("test", "onResume")
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d("test", "onStart")
+    }
 
     override fun onPause() {
         super.onPause()

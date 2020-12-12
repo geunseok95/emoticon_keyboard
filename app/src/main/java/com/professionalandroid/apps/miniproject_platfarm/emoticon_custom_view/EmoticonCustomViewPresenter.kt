@@ -28,7 +28,7 @@ class EmoticonCustomViewPresenter(val mEmoticonCustomViewView: EmoticonCustomVie
                 ) {
                     val body = response.body()
                     if (body != null) {
-                        mEmoticonCustomViewView.addStickerToList(body, position)
+                        mEmoticonCustomViewView.addStickerToList(body, position, 0)
                     }
                     response.errorBody()?.string()
                 }
@@ -45,7 +45,7 @@ class EmoticonCustomViewPresenter(val mEmoticonCustomViewView: EmoticonCustomVie
                 val body = response.body()
                 //Log.d("test", body.toString())
                 if (body != null) {
-                    mEmoticonCustomViewView.addStickerToList(body, position)
+                    mEmoticonCustomViewView.addStickerToList(body, position, 1)
                 }
                 response.errorBody()?.string()
             }

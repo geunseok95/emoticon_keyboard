@@ -4,9 +4,12 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.drawable.Drawable
+import android.net.Uri
+import android.provider.MediaStore
 import android.util.AttributeSet
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -19,6 +22,11 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.target.Target
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.professionalandroid.apps.miniproject_platfarm.ApplicationClass.Companion.ConvertDPtoPX
@@ -28,6 +36,8 @@ import com.professionalandroid.apps.miniproject_platfarm.SearchActivity
 import com.professionalandroid.apps.miniproject_platfarm.emoticon_custom_view.interfaces.EmoticonCustomViewView
 import com.professionalandroid.apps.miniproject_platfarm.emoticon_custom_view.modles.EmoticonData
 import com.professionalandroid.apps.miniproject_platfarm.emoticon_custom_view.modles.GiphyResponse
+import java.io.ByteArrayOutputStream
+import java.io.File
 
 
 open class EmoticonCustomView @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, defStyleAttr: Int = 0)
@@ -54,7 +64,7 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
     var mEmoticonSubContainer: LinearLayout? = null
     var mEmoticonViewPager2: ViewPager2? = null
     var mEmoticonSetting: ImageView? = null
-    var mEmoticonShop: ImageView? = null
+    var mEmoticonSearch: ImageView? = null
     var mKeyboardChange: ImageView? = null
     var mEmotionCustomViewPagerAdapter: EmoticonCustomViewPagerAdapter? = null
 
@@ -66,7 +76,7 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
         mEmoticonTabLayoutContainer = findViewById(R.id.emoticon_tab_layout_container)
         mEmoticonSubContainer = findViewById(R.id.emoticon_sub_container)
         mEmoticonSetting = findViewById(R.id.setting)
-        mEmoticonShop = findViewById(R.id.shop)
+        mEmoticonSearch = findViewById(R.id.search)
         mKeyboardChange = findViewById(R.id.changeKeyBoard)
 
         // getSticker
@@ -102,7 +112,7 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
             mEmoticonTabLayout?.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, ConvertDPtoPX(context, 40))
             mEmoticonViewPager2?.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, ConvertDPtoPX(context, 150))
             mEmoticonSetting?.layoutParams = LayoutParams(ConvertDPtoPX(context, 24), ConvertDPtoPX(context, 24))
-            mEmoticonShop?.layoutParams = LayoutParams(ConvertDPtoPX(context, 24), ConvertDPtoPX(context, 24))
+            mEmoticonSearch?.layoutParams = LayoutParams(ConvertDPtoPX(context, 24), ConvertDPtoPX(context, 24))
             mKeyboardChange?.layoutParams = LayoutParams(ConvertDPtoPX(context, 24), ConvertDPtoPX(context, 24))
 
         }
@@ -119,7 +129,7 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
             mEmoticonTabLayout?.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, ConvertDPtoPX(context, 40))
             mEmoticonViewPager2?.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, ConvertDPtoPX(context, 280))
             mEmoticonSetting?.layoutParams = LayoutParams(ConvertDPtoPX(context, 24), ConvertDPtoPX(context, 24))
-            mEmoticonShop?.layoutParams = LayoutParams(ConvertDPtoPX(context, 24), ConvertDPtoPX(context, 24))
+            mEmoticonSearch?.layoutParams = LayoutParams(ConvertDPtoPX(context, 24), ConvertDPtoPX(context, 24))
             mKeyboardChange?.layoutParams = LayoutParams(ConvertDPtoPX(context, 24), ConvertDPtoPX(context, 24))
         }
 
@@ -127,7 +137,7 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
             keyboardInteractionListener.modeChange(2)
         }
 
-        mEmoticonShop?.setOnClickListener {
+        mEmoticonSearch?.setOnClickListener {
             val popupIntent = Intent(context, SearchActivity()::class.java)
             val pi = PendingIntent.getActivity(context, 0, popupIntent, PendingIntent.FLAG_ONE_SHOT)
             try {
@@ -143,14 +153,14 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
             if(position == 0) {
                 val imageView =  ImageView(context)
                 Glide.with(context)
-                    .load(itemList[0].tabImage[0])
+                    .load(Integer.parseInt(itemList[0].tabImage[0]))
                     .into(imageView)
                 tab.customView = imageView
             }
             else {
                 val imageView =  ImageView(context)
                 Glide.with(context)
-                    .load(itemList[position].tabImage[0])
+                    .load(itemList[position].tabImage[1])
                     .into(imageView)
                 tab.customView = imageView
             }
@@ -162,16 +172,29 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
-                Glide.with(context)
-                    .load(itemList[tab!!.position].tabImage[0])
-                    .into(tab.customView as ImageView)
+                if(tab?.position == 0) {    // Trending
+                    Glide.with(context)
+                        .load(Integer.parseInt(itemList[tab.position].tabImage[1]))
+                        .into(tab.customView as ImageView)
+                }
+                else{   // Certain
+                    Glide.with(context)
+                        .load(itemList[tab!!.position].tabImage[1])
+                        .into(tab.customView as ImageView)
+                }
             }
 
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                // changing tab icon
-                Glide.with(context)
-                    .load(itemList[tab!!.position].tabImage[0])
-                    .into(tab.customView as ImageView)
+                if(tab?.position == 0) {    // Trending
+                    Glide.with(context)
+                        .load(Integer.parseInt(itemList[tab.position].tabImage[0]))
+                        .into(tab.customView as ImageView)
+                }
+                else{   // Certain
+                    Glide.with(context)
+                        .load(itemList[tab!!.position].tabImage[0])
+                        .into(tab.customView as ImageView)
+                }
             }
         })
     }
@@ -182,25 +205,72 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
     }
 
     // 이모티콘 click listener
-    override fun itemSelected(parent_position: Int, position: Int) {
+    override fun itemSelected(parent_position: Int, position: Int) {    // 이미지 공유
+        // url -> bitmap -> uri
+
+        Glide.with(this)
+            .asBitmap()
+            .load(itemList[parent_position].emoticon[position])
+            .into(object : CustomTarget<Bitmap?>() {
+
+                override fun onResourceReady(
+                    resource: Bitmap,
+                    transition: com.bumptech.glide.request.transition.Transition<in Bitmap?>?
+                ) {
+                    val bytes = ByteArrayOutputStream()
+                    resource.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+                    val path = MediaStore.Images.Media.insertImage(context.contentResolver, resource, "Title", null)
+                    val uri = Uri.parse(path.toString())
+
+                    val shareIntent = Intent().apply {
+                        action = Intent.ACTION_SEND
+                        putExtra(Intent.EXTRA_STREAM, uri)
+                        type = "image/gif"
+                        setPackage("com.kakao.talk")
+                    }
+
+                    val pi = PendingIntent.getActivity(context, 0, shareIntent, PendingIntent.FLAG_ONE_SHOT)
+                    try {
+                        pi.send()
+                    } catch (e: Exception) {
+                        Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show()
+                    }
+
+                }
+
+                override fun onLoadCleared(placeholder: Drawable?) {
+                }
+            })
+
 
     }
 
-    override fun addStickerToList(body: GiphyResponse, position: Int) {
-        val temp = EmoticonData(
-            mutableListOf(
-                body.data[0].images.the480WStill.url,
-                body.data[1].images.the480WStill.url
-            ), mutableListOf()
-        )
-        for (i in body.data) {
-            temp.emoticon.add(i.images.original.url)
+    override fun addStickerToList(body: GiphyResponse, position: Int, kinds: Int) {
+        if(kinds == 0) {    // Trending
+            val temp = EmoticonData(
+                mutableListOf(
+                    (R.drawable.star_down).toString(),
+                    (R.drawable.star).toString()
+                ), mutableListOf()
+            )
+            for (i in body.data) {
+                temp.emoticon.add(i.images.original.url)
+            }
+            itemList.add(0, temp)
         }
-        Log.d("test", itemList.size.toString())
-        itemList.add(temp)
-
+        else {  // Certain
+            val temp = EmoticonData(
+                mutableListOf(
+                    body.data[0].images.the480WStill.url,
+                    body.data[0].images.the480WStill.url
+                ), mutableListOf()
+            )
+            for (i in body.data) {
+                temp.emoticon.add(i.images.original.url)
+            }
+            itemList.add(temp)
+        }
         if (itemList.size == size + 1){
-            Log.d("test", itemList.size.toString())
             setData()
         }
     }

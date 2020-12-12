@@ -80,6 +80,7 @@ class EmoticonKeyboardService: InputMethodService() {
     // view가 차지할 영역을 정의
     override fun onCreateInputView(): View {
         // view 중복 참조 제거 (화면 회전 시 등)
+        Log.d("test", "onCreateInputView")
         if (keyboardView != null){
             (keyboardView as ViewGroup).removeAllViews()
         }
@@ -116,11 +117,23 @@ class EmoticonKeyboardService: InputMethodService() {
         return keyboardView!!
     }
 
+    override fun onStartInputView(info: EditorInfo?, restarting: Boolean) {
+        super.onStartInputView(info, restarting)
+        Log.d("test", "StartInputView")
+    }
+
+    override fun onStartInput(attribute: EditorInfo?, restarting: Boolean) {
+        super.onStartInput(attribute, restarting)
+        Log.d("test", "StartInput")
+    }
+
     override fun updateInputViewShown() {
         super.updateInputViewShown()
         Log.d("test", "updateInputViewShown")
-        currentInputConnection.finishComposingText()
-        keyboardInteractionListener.modeChange(sSharedPreferences?.getInt(MODE, 2)!!)
+        if (currentInputConnection != null) {
+            currentInputConnection.finishComposingText()
+            keyboardInteractionListener.modeChange(sSharedPreferences?.getInt(MODE, 2)!!)
+        }
     }
 
     override fun onFinishInput() {
@@ -151,6 +164,5 @@ class EmoticonKeyboardService: InputMethodService() {
             keyboardInteractionListener.modeChange(sSharedPreferences?.getInt(MODE, 2)!!)
         }
         return Service.START_STICKY
-
     }
 }
