@@ -36,7 +36,6 @@ class EmoticonKeyboardService: InputMethodService() {
                     keyboardContainer?.removeAllViews()
                     emoticonKeyboard?.inputConnection = currentInputConnection
                     keyboardContainer?.addView(emoticonKeyboard?.getLayout())
-                    keyboardContainer?.addView(emoticonKeyboard?.getLayout())
                 }
                 1 -> {
                     keyboardContainer?.removeAllViews()
