@@ -28,7 +28,7 @@
 
         </service>
 
-        <activity android:name=".SearchActivity"
+        <activity android:name=".search_custom_view.SearchActivity"
 
             android:theme="@android:style/Theme.Dialog">
 

@@ -4,7 +4,10 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.Color
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
+import android.net.Uri
+import android.provider.MediaStore
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -18,12 +21,13 @@ import androidx.core.view.setMargins
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
 import com.professionalandroid.apps.miniproject_platfarm.ApplicationClass.Companion.ConvertDPtoPX
 import com.professionalandroid.apps.miniproject_platfarm.KeyboardInteractionListener
 import com.professionalandroid.apps.miniproject_platfarm.R
-import com.professionalandroid.apps.miniproject_platfarm.SearchActivity
 import com.professionalandroid.apps.miniproject_platfarm.emoticon_custom_view.modles.GiphyResponse
 import com.professionalandroid.apps.miniproject_platfarm.search_custom_view.interfaces.SearchCustomViewView
+import java.io.ByteArrayOutputStream
 
 class SearchCustomView @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, defStyleAttr: Int = 0)
     : LinearLayout(context, attributeSet, defStyleAttr), SearchCustomViewView, SearchCustomViewRecyclerViewAdapter.ItemSelected{
@@ -117,6 +121,39 @@ class SearchCustomView @JvmOverloads constructor(context: Context, attributeSet:
     }
 
     override fun itemSelected(position: Int) {
+        Glide.with(this)
+                .asBitmap()
+                .load(stickerList[position])
+                .into(object : CustomTarget<Bitmap?>() {
+
+                    override fun onResourceReady(
+                            resource: Bitmap,
+                            transition: com.bumptech.glide.request.transition.Transition<in Bitmap?>?
+                    ) {
+                        val bytes = ByteArrayOutputStream()
+                        resource.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+                        val path = MediaStore.Images.Media.insertImage(context.contentResolver, resource, "Title", null)
+                        val uri = Uri.parse(path.toString())
+
+                        val shareIntent = Intent().apply {
+                            action = Intent.ACTION_SEND
+                            putExtra(Intent.EXTRA_STREAM, uri)
+                            type = "image/gif"
+                            setPackage("com.kakao.talk")
+                        }
+
+                        val pi = PendingIntent.getActivity(context, 0, shareIntent, PendingIntent.FLAG_ONE_SHOT)
+                        try {
+                            pi.send()
+                        } catch (e: Exception) {
+                            Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show()
+                        }
+
+                    }
+
+                    override fun onLoadCleared(placeholder: Drawable?) {
+                    }
+                })
      }
 }
 
@@ -133,7 +170,7 @@ class SearchCustomViewRecyclerViewAdapter(val context: Context, val stickerList:
         init {
             emoticonImage = view.findViewById(R.id.emoticon_image)
             emoticonImage?.setOnClickListener {
-                toggleItemSelected(adapterPosition)
+              //  toggleItemSelected(adapterPosition)
                 listener.itemSelected(adapterPosition)
             }
         }
@@ -159,12 +196,12 @@ class SearchCustomViewRecyclerViewAdapter(val context: Context, val stickerList:
             .load(stickerList[position])
             .into(holder.emoticonImage!!)
 
-        if (selectedItemPosition == position){
-            holder.emoticonImage?.setBackgroundColor(Color.GRAY)
-        }
-        else{
-            holder.emoticonImage?.setBackgroundColor(Color.TRANSPARENT)
-        }
+//        if (selectedItemPosition == position){
+//            holder.emoticonImage?.setBackgroundColor(Color.GRAY)
+//        }
+//        else{
+//            holder.emoticonImage?.setBackgroundColor(Color.TRANSPARENT)
+//        }
     }
 
     fun toggleItemSelected(position:Int){

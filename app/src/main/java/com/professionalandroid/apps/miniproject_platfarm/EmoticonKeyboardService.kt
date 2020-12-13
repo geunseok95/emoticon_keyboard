@@ -3,10 +3,8 @@ package com.professionalandroid.apps.miniproject_platfarm
 import android.app.Service
 import android.content.Intent
 import android.inputmethodservice.InputMethodService
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import com.professionalandroid.apps.miniproject_platfarm.ApplicationClass.Companion.MODE
@@ -80,7 +78,6 @@ class EmoticonKeyboardService: InputMethodService() {
     // view가 차지할 영역을 정의
     override fun onCreateInputView(): View {
         // view 중복 참조 제거 (화면 회전 시 등)
-        Log.d("test", "onCreateInputView")
         if (keyboardView != null){
             (keyboardView as ViewGroup).removeAllViews()
         }
@@ -117,41 +114,15 @@ class EmoticonKeyboardService: InputMethodService() {
         return keyboardView!!
     }
 
-    override fun onStartInputView(info: EditorInfo?, restarting: Boolean) {
-        super.onStartInputView(info, restarting)
-        Log.d("test", "StartInputView")
-    }
-
-    override fun onStartInput(attribute: EditorInfo?, restarting: Boolean) {
-        super.onStartInput(attribute, restarting)
-        Log.d("test", "StartInput")
-    }
-
     override fun updateInputViewShown() {
         super.updateInputViewShown()
-        Log.d("test", "updateInputViewShown")
         if (currentInputConnection != null) {
             currentInputConnection.finishComposingText()
             keyboardInteractionListener.modeChange(sSharedPreferences?.getInt(MODE, 2)!!)
         }
     }
 
-    override fun onFinishInput() {
-        super.onFinishInput()
-        Log.d("test", "onFinishInput")
-    }
-
-    override fun onFinishInputView(finishingInput: Boolean) {
-        super.onFinishInputView(finishingInput)
-        Log.d("test", "onFinishInputView")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d("test", "onDestroy")
-
-    }
-
+    // Dialog 의 intent 받기
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         searchText = intent?.getStringExtra("search")!!
         if(searchText != ""){

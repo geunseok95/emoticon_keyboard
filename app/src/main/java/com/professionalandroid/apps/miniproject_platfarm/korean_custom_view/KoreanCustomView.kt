@@ -14,7 +14,6 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.core.view.children
-import com.professionalandroid.apps.miniproject_platfarm.ApplicationClass
 import com.professionalandroid.apps.miniproject_platfarm.ApplicationClass.Companion.ConvertDPtoPX
 import com.professionalandroid.apps.miniproject_platfarm.KeyboardInteractionListener
 import com.professionalandroid.apps.miniproject_platfarm.R
@@ -33,7 +32,7 @@ class KoreanCustomView constructor(var context:Context, var layoutInflater: Layo
             field = inputConnection
         }
     var sound = 32
-    var vibrate = 100
+    var vibrate = 60
     val numpadText = listOf<String>("1","2","3","4","5","6","7","8","9","0")
     val firstLineText = listOf<String>("ㅂ","ㅈ","ㄷ","ㄱ","ㅅ","ㅛ","ㅕ","ㅑ","ㅐ","ㅔ")
     val secondLineText = listOf<String>("ㅁ","ㄴ","ㅇ","ㄹ","ㅎ","ㅗ","ㅓ","ㅏ","ㅣ")
@@ -190,10 +189,10 @@ class KoreanCustomView constructor(var context:Context, var layoutInflater: Layo
     private fun playVibrate(){
         if(vibrate > 0){
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N_MR1) {
-                vibrator.vibrate(VibrationEffect.createOneShot(70, vibrate))
+                vibrator.vibrate(VibrationEffect.createOneShot(50, vibrate))
             }
             else{
-                vibrator.vibrate(70)
+                vibrator.vibrate(50)
             }
         }
     }
@@ -219,7 +218,12 @@ class KoreanCustomView constructor(var context:Context, var layoutInflater: Layo
                 hangulMaker.clear()
             }
             when (actionButton.text.toString()) {
-
+                "한/영" -> {
+                    keyboardInteractionListener.modeChange(1)
+                }
+                "!#1" -> {
+                    keyboardInteractionListener.modeChange(3)
+                }
                 else -> {
                     playClick(actionButton.text.toString().toCharArray()[0].toInt())
                     try{
@@ -252,7 +256,7 @@ class KoreanCustomView constructor(var context:Context, var layoutInflater: Layo
 
         val onTouchListener = object:View.OnTouchListener {
             override fun onTouch(view: View?, motionEvent: MotionEvent?): Boolean {
-                when (motionEvent?.getAction()) {
+                when (motionEvent?.action) {
                     MotionEvent.ACTION_DOWN -> {
                         handler.removeCallbacks(handlerRunnable)
                         handler.postDelayed(handlerRunnable, initailInterval.toLong())
@@ -321,18 +325,6 @@ class KoreanCustomView constructor(var context:Context, var layoutInflater: Layo
                         specialKey.setOnClickListener(myOnClickListener)
                         specialKey.setOnTouchListener(getOnTouchListener(myOnClickListener))
                         specialKey.setBackgroundResource(R.drawable.key_background)
-                    }
-                    "한/영" -> {
-                        actionButton.text = myText[item]
-                        buttons.add(actionButton)
-                        myOnClickListener = View.OnClickListener { keyboardInteractionListener.modeChange(1) }
-                        actionButton.setOnClickListener(myOnClickListener)
-                    }
-                    "!#1" -> {
-                        actionButton.text = myText[item]
-                        buttons.add(actionButton)
-                        myOnClickListener = View.OnClickListener { keyboardInteractionListener.modeChange(3) }
-                        actionButton.setOnClickListener(myOnClickListener)
                     }
                     else -> {
                         actionButton.text = myText[item]

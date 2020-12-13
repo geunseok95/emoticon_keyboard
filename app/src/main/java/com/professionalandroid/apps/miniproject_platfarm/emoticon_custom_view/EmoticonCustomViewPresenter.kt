@@ -1,6 +1,5 @@
 package com.professionalandroid.apps.miniproject_platfarm.emoticon_custom_view
 
-import android.util.Log
 import com.professionalandroid.apps.miniproject_platfarm.ApplicationClass
 import com.professionalandroid.apps.miniproject_platfarm.ApplicationClass.Companion.api_key
 import com.professionalandroid.apps.miniproject_platfarm.emoticon_custom_view.interfaces.EmoticonCustomViewRetrofitInterface
@@ -19,7 +18,6 @@ class EmoticonCustomViewPresenter(val mEmoticonCustomViewView: EmoticonCustomVie
             .enqueue(object :
                 Callback<GiphyResponse> {
                 override fun onFailure(call: Call<GiphyResponse>, t: Throwable) {
-                    Log.d("test", "Trending sticker 불러오기 실패")
                 }
 
                 override fun onResponse(
@@ -38,12 +36,10 @@ class EmoticonCustomViewPresenter(val mEmoticonCustomViewView: EmoticonCustomVie
     fun getCertainStickerFromGiphy(q: String, position: Int, limit: Int){
         mEmoticonCustomViewRetrofitInterface.getCertainSticker(api_key, q, limit).enqueue(object : Callback<GiphyResponse>{
             override fun onFailure(call: Call<GiphyResponse>, t: Throwable) {
-                Log.d("test", "Certain sticker 불러오기 실패")
             }
 
             override fun onResponse(call: Call<GiphyResponse>, response: Response<GiphyResponse>) {
                 val body = response.body()
-                //Log.d("test", body.toString())
                 if (body != null) {
                     mEmoticonCustomViewView.addStickerToList(body, position, 1)
                 }

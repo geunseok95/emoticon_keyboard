@@ -14,7 +14,6 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.core.view.children
-import com.professionalandroid.apps.miniproject_platfarm.ApplicationClass
 import com.professionalandroid.apps.miniproject_platfarm.ApplicationClass.Companion.ConvertDPtoPX
 import com.professionalandroid.apps.miniproject_platfarm.KeyboardInteractionListener
 import com.professionalandroid.apps.miniproject_platfarm.R
@@ -38,7 +37,7 @@ class SpecialCharactersCustomView constructor(var context:Context, var layoutInf
     val layoutLines = ArrayList<LinearLayout>()
     var downView:View? = null
     var animationMode:Int = 0
-    var vibrate = 100
+    var vibrate = 60
     var sound = 32
     var capsView:ImageView? = null
 
@@ -116,10 +115,10 @@ class SpecialCharactersCustomView constructor(var context:Context, var layoutInf
     private fun playVibrate(){
         if(vibrate > 0){
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N_MR1) {
-                vibrator.vibrate(VibrationEffect.createOneShot(70, vibrate))
+                vibrator.vibrate(VibrationEffect.createOneShot(50, vibrate))
             }
             else{
-                vibrator.vibrate(70)
+                vibrator.vibrate(50)
             }
         }
     }

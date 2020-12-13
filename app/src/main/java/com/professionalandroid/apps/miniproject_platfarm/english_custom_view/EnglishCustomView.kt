@@ -2,7 +2,6 @@ package com.professionalandroid.apps.miniproject_platfarm.english_custom_view
 
 import android.content.Context
 import android.content.Context.AUDIO_SERVICE
-import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.media.AudioManager
 import android.os.*
@@ -13,7 +12,6 @@ import android.view.View
 import android.view.inputmethod.InputConnection
 import android.widget.*
 import androidx.core.view.children
-import com.professionalandroid.apps.miniproject_platfarm.ApplicationClass
 import com.professionalandroid.apps.miniproject_platfarm.ApplicationClass.Companion.ConvertDPtoPX
 import com.professionalandroid.apps.miniproject_platfarm.KeyboardInteractionListener
 import com.professionalandroid.apps.miniproject_platfarm.R
@@ -43,7 +41,7 @@ class EnglishCustomView constructor(var context: Context, var layoutInflater: La
     val myLongClickKeysText = ArrayList<List<String>>()
     val layoutLines = ArrayList<LinearLayout>()
     var downView: View? = null
-    var vibrate = 100
+    var vibrate = 60
     var sound = 32
     var capsView: ImageView? = null
 
@@ -134,10 +132,10 @@ class EnglishCustomView constructor(var context: Context, var layoutInflater: La
     private fun playVibrate(){
         if(vibrate > 0){
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N_MR1) {
-                vibrator.vibrate(VibrationEffect.createOneShot(70, vibrate))
+                vibrator.vibrate(VibrationEffect.createOneShot(50, vibrate))
             }
             else{
-                vibrator.vibrate(70)
+                vibrator.vibrate(50)
             }
         }
     }

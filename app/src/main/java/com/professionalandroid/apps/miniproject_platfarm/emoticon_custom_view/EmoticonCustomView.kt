@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.provider.MediaStore
@@ -22,22 +21,17 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.target.Target
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.professionalandroid.apps.miniproject_platfarm.ApplicationClass.Companion.ConvertDPtoPX
 import com.professionalandroid.apps.miniproject_platfarm.KeyboardInteractionListener
 import com.professionalandroid.apps.miniproject_platfarm.R
-import com.professionalandroid.apps.miniproject_platfarm.SearchActivity
+import com.professionalandroid.apps.miniproject_platfarm.search_custom_view.SearchActivity
 import com.professionalandroid.apps.miniproject_platfarm.emoticon_custom_view.interfaces.EmoticonCustomViewView
 import com.professionalandroid.apps.miniproject_platfarm.emoticon_custom_view.modles.EmoticonData
 import com.professionalandroid.apps.miniproject_platfarm.emoticon_custom_view.modles.GiphyResponse
 import java.io.ByteArrayOutputStream
-import java.io.File
 
 
 open class EmoticonCustomView @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, defStyleAttr: Int = 0)
@@ -322,7 +316,7 @@ class EmoticonObjectRecyclerViewAdapter(val context: Context, val imageList: Mut
         init {
             emoticonImage = view.findViewById(R.id.emoticon_image)
             emoticonImage?.setOnClickListener {
-                toggleItemSelected(adapterPosition)
+                //toggleItemSelected(adapterPosition)
                 listener.itemSelected(parent_position, adapterPosition)
             }
         }
@@ -348,12 +342,12 @@ class EmoticonObjectRecyclerViewAdapter(val context: Context, val imageList: Mut
             .load(imageList[position])
             .into(holder.emoticonImage!!)
 
-        if (selectedItemPosition == position){
-            holder.emoticonImage?.setBackgroundColor(Color.GRAY)
-        }
-        else{
-            holder.emoticonImage?.setBackgroundColor(Color.TRANSPARENT)
-        }
+//        if (selectedItemPosition == position){
+//            holder.emoticonImage?.setBackgroundColor(Color.GRAY)
+//        }
+//        else{
+//            holder.emoticonImage?.setBackgroundColor(Color.TRANSPARENT)
+//        }
     }
 
     fun toggleItemSelected(position:Int){

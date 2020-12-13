@@ -1,4 +1,4 @@
-package com.professionalandroid.apps.miniproject_platfarm
+package com.professionalandroid.apps.miniproject_platfarm.search_custom_view
 
 import android.app.Activity
 import android.content.Context
@@ -6,7 +6,6 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.ViewGroup
 import android.view.Window
@@ -14,6 +13,8 @@ import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageButton
+import com.professionalandroid.apps.miniproject_platfarm.EmoticonKeyboardService
+import com.professionalandroid.apps.miniproject_platfarm.R
 import java.util.*
 
 class SearchActivity: Activity() {
@@ -38,15 +39,11 @@ class SearchActivity: Activity() {
         searchBtn = findViewById(R.id.search_button)
     }
 
-    override fun onStart() {
-        super.onStart()
-        Log.d("test", "dialogOnStart")
-    }
 
     override fun onResume() {
         super.onResume()
-        Log.d("test", "dialogOnResume")
 
+        // 키보드가 자동으로 내려가므로 delay후 다시 올리기
         val myTask: TimerTask = object : TimerTask() {
             override fun run() {
                 edit?.requestFocus()
@@ -55,7 +52,6 @@ class SearchActivity: Activity() {
         }
         val timer = Timer()
         timer.schedule(myTask, 500)
-
 
         searchBtn?.setOnClickListener {
             val intent = Intent(applicationContext, EmoticonKeyboardService()::class.java).apply {
@@ -69,21 +65,6 @@ class SearchActivity: Activity() {
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        Log.d("test", "dialogOnPause")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.d("test", "dialogOnStop")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d("test", "dialogOnDestroy")
-
-    }
 
     fun showKeyboard() {
         val inputMethodManager =
@@ -92,7 +73,6 @@ class SearchActivity: Activity() {
             InputMethodManager.SHOW_FORCED,
             InputMethodManager.HIDE_IMPLICIT_ONLY
         )
-        Log.d("test", "showKeyboard")
     }
 
 }
