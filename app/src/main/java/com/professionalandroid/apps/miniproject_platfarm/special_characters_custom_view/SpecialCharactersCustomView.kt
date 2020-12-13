@@ -273,6 +273,7 @@ class SpecialCharactersCustomView constructor(var context:Context, var layoutInf
     }
     fun getSpaceAction():View.OnClickListener{
         return View.OnClickListener{
+            playVibrate()
             playClick('ㅂ'.toInt())
             inputConnection?.commitText(" ",1)
         }
@@ -280,6 +281,7 @@ class SpecialCharactersCustomView constructor(var context:Context, var layoutInf
 
     fun getDeleteAction():View.OnClickListener{
         return View.OnClickListener{
+            playVibrate()
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 inputConnection?.deleteSurroundingTextInCodePoints(1, 0)
             }else{
@@ -290,12 +292,14 @@ class SpecialCharactersCustomView constructor(var context:Context, var layoutInf
 
     fun getCapsAction():View.OnClickListener{
         return View.OnClickListener{
+            playVibrate()
             modeChange()
         }
     }
 
     fun getEnterAction():View.OnClickListener{
         return View.OnClickListener{
+            playVibrate()
             val eventTime = SystemClock.uptimeMillis()
             inputConnection?.sendKeyEvent(KeyEvent(eventTime, eventTime,
                 KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_ENTER, 0, 0, 0, 0,
