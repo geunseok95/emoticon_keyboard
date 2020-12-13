@@ -39,19 +39,17 @@ class SearchActivity: Activity() {
         searchBtn = findViewById(R.id.search_button)
     }
 
-
     override fun onResume() {
         super.onResume()
 
         // 키보드가 자동으로 내려가므로 delay후 다시 올리기
         val myTask: TimerTask = object : TimerTask() {
             override fun run() {
-                edit?.requestFocus()
                 showKeyboard()
             }
         }
         val timer = Timer()
-        timer.schedule(myTask, 500)
+        timer.schedule(myTask, 300)
 
         searchBtn?.setOnClickListener {
             val intent = Intent(applicationContext, EmoticonKeyboardService()::class.java).apply {
@@ -64,7 +62,6 @@ class SearchActivity: Activity() {
             finish()
         }
     }
-
 
     fun showKeyboard() {
         val inputMethodManager =

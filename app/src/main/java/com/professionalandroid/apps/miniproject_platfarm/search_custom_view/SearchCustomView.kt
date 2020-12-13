@@ -33,8 +33,8 @@ class SearchCustomView @JvmOverloads constructor(context: Context, attributeSet:
     : LinearLayout(context, attributeSet, defStyleAttr), SearchCustomViewView, SearchCustomViewRecyclerViewAdapter.ItemSelected{
 
     lateinit var keyboardInteractionListener: KeyboardInteractionListener
-    lateinit var mSearchCustomViewRecyclerViewAdapter: SearchCustomViewRecyclerViewAdapter
-    lateinit var mSearchCustomViewPresenter: SearchCustomViewPresenter
+    var mSearchCustomViewRecyclerViewAdapter: SearchCustomViewRecyclerViewAdapter
+    var mSearchCustomViewPresenter: SearchCustomViewPresenter
     val stickerList = mutableListOf<String>()
 
     var searchCustomView: LinearLayout? = null
@@ -204,6 +204,7 @@ class SearchCustomViewRecyclerViewAdapter(val context: Context, val stickerList:
 //        }
     }
 
+    // 배경색 바꾸기
     fun toggleItemSelected(position:Int){
         val previous = selectedItemPosition
         if(position != selectedItemPosition){

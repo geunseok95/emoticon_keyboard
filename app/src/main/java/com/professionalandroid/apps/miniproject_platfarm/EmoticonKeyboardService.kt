@@ -36,6 +36,7 @@ class EmoticonKeyboardService: InputMethodService() {
                     keyboardContainer?.removeAllViews()
                     emoticonKeyboard?.inputConnection = currentInputConnection
                     keyboardContainer?.addView(emoticonKeyboard?.getLayout())
+                    keyboardContainer?.addView(emoticonKeyboard?.getLayout())
                 }
                 1 -> {
                     keyboardContainer?.removeAllViews()
@@ -124,7 +125,7 @@ class EmoticonKeyboardService: InputMethodService() {
 
     // Dialog 의 intent 받기
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        searchText = intent?.getStringExtra("search")!!
+        searchText = if(intent?.getStringExtra("search") != null) { intent.getStringExtra("search")!!}  else {"OMG"}
         if(searchText != ""){
             searchCustomView = SearchCustomView(applicationContext, keyboardInteractionListener, searchText).apply {
                 inputConnection = currentInputConnection
