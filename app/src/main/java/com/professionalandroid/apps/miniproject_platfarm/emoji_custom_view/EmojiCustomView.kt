@@ -114,7 +114,7 @@ class EmojiCustomView constructor(var context:Context, var layoutInflater: Layou
         val gm = GridLayoutManager(context,8)
         gm.isItemPrefetchEnabled = true
         recyclerView.layoutManager = gm
-        recyclerView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ConvertDPtoPX(context, 50) * 5)
+        recyclerView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ConvertDPtoPX(context, 50) * 4)
     }
 
     fun getEmojiByUnicode(unicode: Int): String {

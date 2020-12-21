@@ -41,7 +41,6 @@ class SearchActivity: Activity() {
 
     override fun onResume() {
         super.onResume()
-
         // 키보드가 자동으로 내려가므로 delay후 다시 올리기
         val myTask: TimerTask = object : TimerTask() {
             override fun run() {
@@ -58,8 +57,8 @@ class SearchActivity: Activity() {
                     edit?.text.toString()
                 )
             }
-            startService(intent)
             finish()
+            startService(intent)
         }
     }
 
@@ -71,5 +70,4 @@ class SearchActivity: Activity() {
             InputMethodManager.HIDE_IMPLICIT_ONLY
         )
     }
-
 }

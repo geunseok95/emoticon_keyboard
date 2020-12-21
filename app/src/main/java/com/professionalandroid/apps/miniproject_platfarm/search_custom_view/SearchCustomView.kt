@@ -1,14 +1,14 @@
 package com.professionalandroid.apps.miniproject_platfarm.search_custom_view
 
 import android.app.PendingIntent
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import android.net.Uri
-import android.provider.MediaStore
+import android.os.Environment
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,17 +17,21 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.core.content.FileProvider
 import androidx.core.view.setMargins
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.professionalandroid.apps.miniproject_platfarm.ApplicationClass.Companion.ConvertDPtoPX
 import com.professionalandroid.apps.miniproject_platfarm.KeyboardInteractionListener
 import com.professionalandroid.apps.miniproject_platfarm.R
 import com.professionalandroid.apps.miniproject_platfarm.emoticon_custom_view.modles.GiphyResponse
 import com.professionalandroid.apps.miniproject_platfarm.search_custom_view.interfaces.SearchCustomViewView
-import java.io.ByteArrayOutputStream
+import java.io.*
 
 class SearchCustomView @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, defStyleAttr: Int = 0)
     : LinearLayout(context, attributeSet, defStyleAttr), SearchCustomViewView, SearchCustomViewRecyclerViewAdapter.ItemSelected{
@@ -88,7 +92,7 @@ class SearchCustomView @JvmOverloads constructor(context: Context, attributeSet:
             mSearchChangeKeyboard?.layoutParams = LayoutParams(ConvertDPtoPX(context, 30), ConvertDPtoPX(context, 30)).apply {
                 setMargins(ConvertDPtoPX(context, 5))
             }
-            mSearchRecyclerView?.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, ConvertDPtoPX(context, 280))
+            mSearchRecyclerView?.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, ConvertDPtoPX(context, 215))
 
         }
 
@@ -120,40 +124,53 @@ class SearchCustomView @JvmOverloads constructor(context: Context, attributeSet:
         mSearchCustomViewRecyclerViewAdapter.notifyDataSetChanged()
     }
 
-    override fun itemSelected(position: Int) {
+    override fun itemSelected(position: Int) {  // 이미지 공유
+        // download file -> copy file to temporary file -> share sheet
+
         Glide.with(this)
-                .asBitmap()
-                .load(stickerList[position])
-                .into(object : CustomTarget<Bitmap?>() {
+                .download(stickerList[position])
+                .listener(object : RequestListener<File?> {
+                    override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<File?>?, isFirstResource: Boolean): Boolean {
+                        Log.d("test","test")
+                        return false
+                    }
+                    override fun onResourceReady(resource: File?, model: Any?, target: Target<File?>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
 
-                    override fun onResourceReady(
-                            resource: Bitmap,
-                            transition: com.bumptech.glide.request.transition.Transition<in Bitmap?>?
-                    ) {
-                        val bytes = ByteArrayOutputStream()
-                        resource.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
-                        val path = MediaStore.Images.Media.insertImage(context.contentResolver, resource, "Title", null)
-                        val uri = Uri.parse(path.toString())
+                        val storageDir : File? = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+                        val contentResolver: ContentResolver = context.contentResolver!!
+                        val file = File.createTempFile( "${System.currentTimeMillis()}","gif",storageDir)
 
+                        // copy file to temporary file
+                        try {
+                            val inputStream: InputStream = contentResolver.openInputStream(Uri.fromFile(resource))!!
+                            val outputStream: OutputStream = FileOutputStream(file)
+                            val buf = ByteArray(1024)
+                            var len: Int
+                            while (inputStream.read(buf).also { len = it } > 0) outputStream.write(buf, 0, len)
+                            outputStream.close()
+                            inputStream.close()
+                        }
+                        catch (ignore: IOException){
+                        }
+
+                        // Sharesheet
                         val shareIntent = Intent().apply {
                             action = Intent.ACTION_SEND
-                            putExtra(Intent.EXTRA_STREAM, uri)
+                            putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(context, "com.professionalandroid.apps.miniproject_platfarm.fileprovider", file))
                             type = "image/gif"
                             setPackage("com.kakao.talk")
                         }
 
                         val pi = PendingIntent.getActivity(context, 0, shareIntent, PendingIntent.FLAG_ONE_SHOT)
+
                         try {
                             pi.send()
                         } catch (e: Exception) {
                             Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show()
                         }
-
+                        return true
                     }
-
-                    override fun onLoadCleared(placeholder: Drawable?) {
-                    }
-                })
+                }).submit()
      }
 }
 

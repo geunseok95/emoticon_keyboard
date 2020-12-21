@@ -29,7 +29,6 @@ import com.bumptech.glide.request.target.Target
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.professionalandroid.apps.miniproject_platfarm.ApplicationClass.Companion.ConvertDPtoPX
-import com.professionalandroid.apps.miniproject_platfarm.BuildConfig
 import com.professionalandroid.apps.miniproject_platfarm.KeyboardInteractionListener
 import com.professionalandroid.apps.miniproject_platfarm.R
 import com.professionalandroid.apps.miniproject_platfarm.emoticon_custom_view.interfaces.EmoticonCustomViewView
@@ -126,7 +125,7 @@ open class EmoticonCustomView @JvmOverloads constructor(context: Context, attrib
                 gravity = Gravity.CENTER
             }
             mEmoticonTabLayout?.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, ConvertDPtoPX(context, 40))
-            mEmoticonViewPager2?.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, ConvertDPtoPX(context, 280))
+            mEmoticonViewPager2?.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, ConvertDPtoPX(context, 210))
             mEmoticonSetting?.layoutParams = LayoutParams(ConvertDPtoPX(context, 24), ConvertDPtoPX(context, 24))
             mEmoticonSearch?.layoutParams = LayoutParams(ConvertDPtoPX(context, 24), ConvertDPtoPX(context, 24))
             mKeyboardChange?.layoutParams = LayoutParams(ConvertDPtoPX(context, 24), ConvertDPtoPX(context, 24))

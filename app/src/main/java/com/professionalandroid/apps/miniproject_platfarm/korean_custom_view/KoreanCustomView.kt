@@ -31,7 +31,6 @@ class KoreanCustomView constructor(var context:Context, var layoutInflater: Layo
         set(inputConnection){
             field = inputConnection
         }
-    var sound = 32
     var vibrate = 60
     val numpadText = listOf<String>("1","2","3","4","5","6","7","8","9","0")
     val firstLineText = listOf<String>("ㅂ","ㅈ","ㄷ","ㄱ","ㅅ","ㅛ","ㅕ","ㅑ","ㅐ","ㅔ")
@@ -104,7 +103,6 @@ class KoreanCustomView constructor(var context:Context, var layoutInflater: Layo
         layoutLines.add(thirdLine)
         layoutLines.add(fourthLine)
         setLayoutComponents()
-
     }
 
     fun getLayout():LinearLayout{
@@ -115,7 +113,6 @@ class KoreanCustomView constructor(var context:Context, var layoutInflater: Layo
         setLayoutComponents()
         return koreanLayout
     }
-
 
     fun modechange(){
         if(isCaps){

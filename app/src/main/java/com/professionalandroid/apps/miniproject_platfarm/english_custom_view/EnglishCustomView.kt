@@ -42,7 +42,6 @@ class EnglishCustomView constructor(var context: Context, var layoutInflater: La
     val layoutLines = ArrayList<LinearLayout>()
     var downView: View? = null
     var vibrate = 60
-    var sound = 32
     var capsView: ImageView? = null
 
     fun init() {
@@ -185,7 +184,6 @@ class EnglishCustomView constructor(var context: Context, var layoutInflater: La
             playVibrate()
             val cursorcs:CharSequence? =  inputConnection?.getSelectedText(InputConnection.GET_TEXT_WITH_STYLES)
             if(cursorcs != null && cursorcs.length >= 2){
-
                 val eventTime = SystemClock.uptimeMillis()
                 inputConnection?.finishComposingText()
                 inputConnection?.sendKeyEvent(KeyEvent(eventTime, eventTime,
@@ -200,24 +198,22 @@ class EnglishCustomView constructor(var context: Context, var layoutInflater: La
                 inputConnection?.sendKeyEvent(KeyEvent(SystemClock.uptimeMillis(), eventTime,
                     KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_LEFT, 0, 0, 0, 0,
                     KeyEvent.FLAG_SOFT_KEYBOARD))
-
             }
-            else{
-                when (actionButton.text.toString()) {
-                    "한/영" -> {
-                        keyboardInteractionListener.modeChange(2)
-                    }
-                    "!#1" -> {
-                        keyboardInteractionListener.modeChange(3)
-                    }
-                    else -> {
-                        playClick(
-                            actionButton.text.toString().toCharArray()[0].toInt()
-                        )
-                        inputConnection?.commitText(actionButton.text, 1)
-                    }
+            when (actionButton.text.toString()) {
+                "한/영" -> {
+                    keyboardInteractionListener.modeChange(2)
+                }
+                "!#1" -> {
+                    keyboardInteractionListener.modeChange(3)
+                }
+                else -> {
+                    playClick(
+                        actionButton.text.toString().toCharArray()[0].toInt()
+                    )
+                    inputConnection?.commitText(actionButton.text, 1)
                 }
             }
+
         })
         actionButton.setOnClickListener(clickListener)
         return clickListener
@@ -364,6 +360,4 @@ class EnglishCustomView constructor(var context: Context, var layoutInflater: La
                 KeyEvent.FLAG_SOFT_KEYBOARD))
         }
     }
-
-
 }
