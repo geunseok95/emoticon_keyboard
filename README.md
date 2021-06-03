@@ -14,3 +14,10 @@
 
 #### 스티커
 <img src="https://github.com/geunseok95/emoticon_keyboard/blob/main/photo/Stickers.png?raw=true" width="300">
+
+#### 적용 스택
+* MVP패턴
+* Retrofit
+* Giphy API
+* Glide
+* IME Service
