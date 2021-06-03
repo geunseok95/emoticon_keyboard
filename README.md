@@ -13,4 +13,4 @@
 ![Emoji](https://github.com/geunseok95/emoticon_keyboard/blob/main/photo/Emoji.png?raw=true)
 
 #### 스티커
-![Sticker](https://github.com/geunseok95/emoticon_keyboard/blob/main/photo/Sticker.png?raw=true)
+![Stickers](https://github.com/geunseok95/emoticon_keyboard/blob/main/photo/Stickers.png?raw=true)
